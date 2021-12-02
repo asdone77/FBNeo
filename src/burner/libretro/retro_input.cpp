@@ -709,6 +709,18 @@ static INT32 GameInpSpecialOne(struct GameInp* pgi, INT32 nPlayer, char* szb, ch
 		}
 	}
 
+	// Lunar Lander
+	if ((parentrom && strcmp(parentrom, "llander") == 0) ||
+		(drvname && strcmp(drvname, "llander") == 0)
+	) {
+		if (strcmp("Select Game", description) == 0) {
+			GameInpDigital2RetroInpKey(pgi, nPlayer, RETRO_DEVICE_ID_JOYPAD_R3, description);
+		}
+		if (strcmp("Abort", description) == 0) {
+			GameInpDigital2RetroInpKey(pgi, nPlayer, RETRO_DEVICE_ID_JOYPAD_L3, description);
+		}
+	}
+
 	// Out Run
 	// Super Hang-On
 	// Turbo Out Run
@@ -1545,6 +1557,18 @@ static INT32 GameInpSpecialOne(struct GameInp* pgi, INT32 nPlayer, char* szb, ch
 		// mk3
 		if (strcmp("Run", description) == 0) {
 			GameInpDigital2RetroInpKey(pgi, nPlayer, (nDeviceType[nPlayer] == RETROPAD_MODERN ? RETRO_DEVICE_ID_JOYPAD_R2 : RETRO_DEVICE_ID_JOYPAD_R), description);
+		}
+	}
+
+	// Xybots
+	if ((parentrom && strcmp(parentrom, "xybots") == 0) ||
+		(drvname && strcmp(drvname, "xybots") == 0)
+	) {
+		if (strcmp("Twist Left", description) == 0) {
+			GameInpDigital2RetroInpKey(pgi, nPlayer, RETRO_DEVICE_ID_JOYPAD_L, description);
+		}
+		if (strcmp("Twist Right", description) == 0) {
+			GameInpDigital2RetroInpKey(pgi, nPlayer, RETRO_DEVICE_ID_JOYPAD_R, description);
 		}
 	}
 
