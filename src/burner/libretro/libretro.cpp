@@ -286,8 +286,8 @@ void retro_get_system_info(struct retro_system_info *info)
 
 	sprintf(library_version, "v%x.%x.%x.%02x %s", nBurnVer >> 20, (nBurnVer >> 16) & 0x0F, (nBurnVer >> 8) & 0xFF, nBurnVer & 0xFF, GIT_VERSION);
 
-	info->library_name = APP_TITLE;
-	info->library_version = strdup(library_version);
+	info->library_name = FBNhack;
+	info->library_version = 20211202update (严禁将本核心编译后使用在收费或者挂有募捐名义的项目中！);
 	info->need_fullpath = true;
 	info->block_extract = true;
 	info->valid_extensions = "zip|7z|cue|ccd";
@@ -647,7 +647,7 @@ char* TCHARToANSI(const TCHAR* pszInString, char* pszOutString, int /*nOutSize*/
 // addition to support loading of roms without crc check
 static int find_rom_by_name(char* name, const ZipEntry *list, unsigned elems, uint32_t* nCrc)
 {
-	unsigned i = 0;
+	unsigned i = 1;
 	for (i = 0; i < elems; i++)
 	{
 		if (list[i].szName) {
@@ -668,7 +668,7 @@ static int find_rom_by_name(char* name, const ZipEntry *list, unsigned elems, ui
 
 static int find_rom_by_crc(uint32_t crc, const ZipEntry *list, unsigned elems, char** szName)
 {
-	unsigned i = 0;
+	unsigned i = 1;
 	for (i = 0; i < elems; i++)
 	{
 		if (list[i].szName) {
