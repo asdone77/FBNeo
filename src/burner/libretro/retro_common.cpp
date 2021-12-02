@@ -73,74 +73,79 @@ static UINT8 diag_input_select_l_r[] =  {RETRO_DEVICE_ID_JOYPAD_SELECT, RETRO_DE
 static const struct retro_core_option_v2_definition var_empty = { NULL, NULL, NULL, NULL, NULL, NULL, {{0}}, NULL };
 static const struct retro_core_option_v2_definition var_fbneo_allow_depth_32 = {
 	"fbneo-allow-depth-32",
-	"Use 32-bits color depth when available",
+	"使用32位颜色深度",
 	NULL,
-	"Change pixel format, some games require this to render properly, it could impact performances on some platforms",
+	"改变像素格式，有些游戏需要这样才能正确渲染，这可能会影响某些平台上的性能",
 	NULL,
 	NULL,
 	{
-		{ "disabled", NULL },
-		{ "enabled", NULL },
+		{ "禁用", NULL },
+		{ "启用", NULL },",
+	NULL,
+	NULL,
+	{
+		{ "禁用", NULL },
+		{ "启用", NULL },
 		{ NULL, NULL },
 	},
-	"enabled"
+	"启用"
 };
 static const struct retro_core_option_v2_definition var_fbneo_vertical_mode = {
 	"fbneo-vertical-mode",
-	"Vertical mode",
+	"坚版模式",
 	NULL,
-	"Rotate display for vertical screens",
+	"垂直旋转屏幕",
 	NULL,
 	NULL,
 	{
-		{ "disabled", NULL },
-		{ "enabled", NULL },
-		{ "alternate", NULL },
+		{ "禁用", NULL },
+		{ "启用", NULL },
+		{ "备用", NULL },
 		{ NULL, NULL },
 	},
-	"disabled"
+	"禁用"
 };
 static const struct retro_core_option_v2_definition var_fbneo_fixed_frameskip = {
 	"fbneo-fixed-frameskip",
-	"Fixed Frameskip",
+	"固定跳帧",
 	NULL,
-	"When 'Frameskip' is set to 'Fixed', or if the frontend doesn't support the alternative 'Frameskip' mode, skip rendering at a fixed rate of X frames out of X+1",
+	"当“跳帧”设置为“固定”时，或者如果前端不支持替代的“跳帧”模式，则以固定速率跳过渲染，即X+1中的X帧",
 	NULL,
 	"frameskip",
 	{
-		{ "0", "No skipping" },
-		{ "1", "Skip rendering of 1 frames out of 2" },
-		{ "2", "Skip rendering of 2 frames out of 3" },
-		{ "3", "Skip rendering of 3 frames out of 4" },
-		{ "4", "Skip rendering of 4 frames out of 5" },
-		{ "5", "Skip rendering of 5 frames out of 6" },
+		{ "0", "不要跳过" },
+		{ "1", "跳过渲染2帧中的1帧" },
+		{ "2", "跳过渲染3帧中的2帧" },
+		{ "3", "跳过渲染4帧中的3帧" },
+		{ "4", "跳过渲染5帧中的4帧" },
+		{ "5", "跳过渲染6帧中的5帧" },
 		{ NULL, NULL },
 	},
 	"0"
 };
 static const struct retro_core_option_v2_definition var_fbneo_frameskip_type = {
 	"fbneo-frameskip-type",
-	"Frameskip",
+	"跳帧",
 	NULL,
-	"Skip frames to avoid audio buffer under-run (crackling). Improves performance at the expense of visual smoothness. 'Auto' skips frames when advised by the frontend. 'Manual' uses the 'Frameskip Threshold (%)' setting. 'Fixed' uses the 'Fixed Frameskip' setting.",
+	"跳过帧以避免音频缓冲区运行不足(爆音).以牺牲视觉平滑度为代价提高性能.'自动'在前端建议时跳过帧。'手动'使用'跳帧阈值(%)'设置。“固定”使用了“固定跳帧”设置..",
 	NULL,
-	"frameskip",
+	"跳帧",
 	{
-		{ "disabled", NULL },
-		{ "Fixed", NULL },
-		{ "Auto", NULL },
-		{ "Manual", NULL },
+		{ "禁用", NULL },
+		{ "固定", NULL },
+		{ "自动", NULL },
+		{ "手动", NULL },
 		{ NULL, NULL },
 	},
-	"disabled"
+	"禁用"
 };
 static const struct retro_core_option_v2_definition var_fbneo_frameskip_manual_threshold = {
 	"fbneo-frameskip-manual-threshold",
-	"Frameskip Threshold (%)",
+	"跳帧阈值 (%)",
 	NULL,
-	"When 'Frameskip' is set to 'Manual', specifies the audio buffer occupancy threshold (percentage) below which frames will be skipped. Higher values reduce the risk of crackling by causing frames to be dropped more frequently.",
+	"当“跳帧”设置为“手动”时，指定音频缓冲区占用率阈值(百分比)，低于该阈值的帧将被跳过。更高的值会导致更频繁地丢弃帧，从而降低爆音的风险.",
 	NULL,
-	"frameskip",
+	"跳帧",
 	{
 		{ "15", NULL },
 		{ "18", NULL },
@@ -164,9 +169,9 @@ static const struct retro_core_option_v2_definition var_fbneo_frameskip_manual_t
 };
 static const struct retro_core_option_v2_definition var_fbneo_cpu_speed_adjust = {
 	"fbneo-cpu-speed-adjust",
-	"CPU clock",
+	"CPU 频率",
 	NULL,
-	"Change emulated cpu frequency for various systems, by increasing you can fix native slowdowns in some games, by decreasing you can help performance on low-end devices",
+	"设置各系统模拟器的CPU频率, 通过超频可以修复游戏卡顿现象, 通过降低频率可以在低端设备上提高性能",
 	NULL,
 	NULL,
 	{
@@ -176,62 +181,62 @@ static const struct retro_core_option_v2_definition var_fbneo_cpu_speed_adjust =
 };
 static const struct retro_core_option_v2_definition var_fbneo_diagnostic_input = {
 	"fbneo-diagnostic-input",
-	"Diagnostic Input",
+	"诊断输入(设置组合键)",
 	NULL,
-	"Configure button combination to enter cabinet service menu",
+	"用来设置进入基板服务菜单的组合键",
 	NULL,
 	NULL,
 	{
-		{ "None", NULL },
-		{ "Hold Start", NULL },
+		{ "无", NULL },
+		{ "按住 Start", NULL },
 		{ "Start + A + B", NULL },
-		{ "Hold Start + A + B", NULL },
+		{ "按住 Start + A + B", NULL },
 		{ "Start + L + R", NULL },
-		{ "Hold Start + L + R", NULL },
-		{ "Hold Select", NULL },
+		{ "按住 Start + L + R", NULL },
+		{ "按住 Select", NULL },
 		{ "Select + A + B", NULL },
-		{ "Hold Select + A + B", NULL },
+		{ "按住 Select + A + B", NULL },
 		{ "Select + L + R", NULL },
-		{ "Hold Select + L + R", NULL },
+		{ "按住 Select + L + R", NULL },
 		{ NULL, NULL },
 	},
-	"Hold Start"
+	"按住 Start"
 };
 static const struct retro_core_option_v2_definition var_fbneo_hiscores = {
 	"fbneo-hiscores",
-	"Hiscores",
+	"高分",
 	NULL,
-	"Enable high scores support, you also need the file hiscore.dat in your system/fbneo/ folder",
+	"如果要启用高分支持, 还需要system/fbneo/文件夹中的hiscore.dat文件",
 	NULL,
 	NULL,
 	{
-		{ "disabled", NULL },
-		{ "enabled", NULL },
+		{ "禁用", NULL },
+		{ "启用", NULL },
 		{ NULL, NULL },
 	},
-	"enabled"
+	"启用"
 };
 static const struct retro_core_option_v2_definition var_fbneo_allow_patched_romsets = {
 	"fbneo-allow-patched-romsets",
-	"Allow patched romsets",
+	"peng汉化",
 	NULL,
-	"Allow romsets from your system/fbneo/patched/ folder to override your romsets, crcs will be ignored but sizes and names must still match, you need to close content for this setting to take effect",
+	"peng汉化, 请勿商用, 严禁将本核心编译后使用在收费或者挂有募捐名义的项目中！！！",
 	NULL,
 	NULL,
 	{
-		{ "disabled", NULL },
-		{ "enabled", NULL },
+		{ "禁用", NULL },
+		{ "启用", NULL },
 		{ NULL, NULL },
 	},
-	"enabled"
+	"启用"
 };
 static const struct retro_core_option_v2_definition var_fbneo_samplerate = {
 	"fbneo-samplerate",
-	"Samplerate",
+	"采样器",
 	NULL,
-	"Configure samplerate, it could impact performances, closing & starting game again is required",
+	"配置采样器, 可能会影响性能, 需要重新关闭和启动游戏",
 	NULL,
-	"audio",
+	"音频",
 	{
 		{ "44100", NULL },
 		{ "48000", NULL },
@@ -241,13 +246,13 @@ static const struct retro_core_option_v2_definition var_fbneo_samplerate = {
 };
 static const struct retro_core_option_v2_definition var_fbneo_sample_interpolation = {
 	"fbneo-sample-interpolation",
-	"Sample Interpolation",
+	"样本插值",
 	NULL,
-	"Configure sample interpolation, it could impact performances",
+	"配置样本插值, 可能会影响性能",
 	NULL,
-	"audio",
+	"音频",
 	{
-		{ "disabled", NULL },
+		{ "禁用", NULL },
 		{ "2-point 1st order", NULL },
 		{ "4-point 3rd order", NULL },
 		{ NULL, NULL },
@@ -256,13 +261,13 @@ static const struct retro_core_option_v2_definition var_fbneo_sample_interpolati
 };
 static const struct retro_core_option_v2_definition var_fbneo_fm_interpolation = {
 	"fbneo-fm-interpolation",
-	"FM Interpolation",
+	"调频插值",
 	NULL,
-	"Configure FM interpolation, it could impact performances",
+	"配置调频插值, 可能会影响性能",
 	NULL,
-	"audio",
+	"音频",
 	{
-		{ "disabled", NULL },
+		{ "禁用", NULL },
 		{ "4-point 3rd order", NULL },
 		{ NULL, NULL },
 	},
@@ -270,23 +275,23 @@ static const struct retro_core_option_v2_definition var_fbneo_fm_interpolation =
 };
 static const struct retro_core_option_v2_definition var_fbneo_lowpass_filter = {
 	"fbneo-lowpass-filter",
-	"LowPass Filter",
+	"低通滤波",
 	NULL,
-	"Enable LowPass Filter",
+	"启用低通滤波",
 	NULL,
-	"audio",
+	"音频",
 	{
-		{ "disabled", NULL },
-		{ "enabled", NULL },
+		{ "禁用", NULL },
+		{ "启用", NULL },
 		{ NULL, NULL },
 	},
-	"disabled"
+	"禁用"
 };
 static const struct retro_core_option_v2_definition var_fbneo_analog_speed = {
 	"fbneo-analog-speed",
-	"Analog Speed",
+	"模拟速度",
 	NULL,
-	"Mitigate analog controls speed, some games might require low values to be playable",
+	"降低模拟速度, 一些游戏可能要求较低的值才能玩",
 	NULL,
 	NULL,
 	{
@@ -296,41 +301,41 @@ static const struct retro_core_option_v2_definition var_fbneo_analog_speed = {
 };
 static const struct retro_core_option_v2_definition var_fbneo_lightgun_hide_crosshair = {
 	"fbneo-lightgun-hide-crosshair",
-	"No crosshair with lightgun device",
+	"隐藏光枪装置的准心",
 	NULL,
-	"Hide crosshair if you play with a lightgun device",
+	"如果使用光枪设备, 请隐藏准心",
 	NULL,
 	NULL,
 	{
-		{ "disabled", NULL },
-		{ "enabled", NULL },
+		{ "禁用", NULL },
+		{ "启用", NULL },
 		{ NULL, NULL },
 	},
-	"enabled"
+	"启用"
 };
 #ifdef USE_CYCLONE
 static const struct retro_core_option_v2_definition var_fbneo_cyclone = {
 	"fbneo-cyclone",
-	"Enable cyclone",
+	"使用 cyclone",
 	NULL,
-	"Use at your own risk, it could improve performance on some emulated systems for low-end devices, but there are known side effects : savestates won't be compatible with normal interpreter, and some systems won't work",
+	"使用它可能会提高一些低端设备模拟系统的性能,但会导致：保存状态不会与一般的解释器兼容，有些系统将无法正常使用",
 	NULL,
 	NULL,
 	{
-		{ "disabled", NULL },
-		{ "enabled", NULL },
+		{ "禁用", NULL },
+		{ "启用", NULL },
 		{ NULL, NULL },
 	},
-	"disabled"
+	"禁用"
 };
 #endif
 
 // Neo Geo core options
 static const struct retro_core_option_v2_definition var_fbneo_neogeo_mode = {
 	"fbneo-neogeo-mode",
-	"Neo-Geo mode",
+	"Neo-Geo 模式",
 	NULL,
-	"Load appropriate bios depending on your choice, under the condition such a bios is compatible with the running game",
+	"根据您的选择加载适当的bios, 前提是bios与正在运行的游戏兼容",
 	NULL,
 	NULL,
 	{
@@ -734,27 +739,27 @@ void set_environment()
 		option_defs_us[idx_var].default_value    = dipswitch_core_options[dip_idx].default_bdi.szText;
 		// Instead of filtering out the dips, make the description a warning if it's a neogeo game using a different default bios
 		if (neogeo_use_specific_default_bios && is_neogeo_game && dipswitch_core_options[dip_idx].friendly_name.compare("[Dipswitch] BIOS") == 0)
-			option_defs_us[idx_var].info         = "THIS NEOGEO GAME USES A DIFFERENT DEFAULT BIOS, CHANGE IT AT YOUR OWN RISK";
+			option_defs_us[idx_var].info         = "这个NEOGEO游戏不是使用默认BIOS, 更换BIOS后可能无法运行游戏";
 		else
-			option_defs_us[idx_var].info         = "Dipswitch setting, setting is specific to the running romset";
+			option_defs_us[idx_var].info         = "DipSwitch设置, 设置特定于运行的 romset";
 		for (int dip_value_idx = 0; dip_value_idx < dipswitch_core_options[dip_idx].values.size(); dip_value_idx++)
 		{
 			option_defs_us[idx_var].values[dip_value_idx].value = dipswitch_core_options[dip_idx].values[dip_value_idx].friendly_name.c_str();
 		}
 		option_defs_us[idx_var].values[dipswitch_core_options[dip_idx].values.size()].value = NULL;
-		if (option_defs_us[idx_var].default_value == NULL) HandleMessage(RETRO_LOG_ERROR, "Default value for '%s' not found, it's a bug, please report it\n", option_defs_us[idx_var].desc);
+		if (option_defs_us[idx_var].default_value == NULL) HandleMessage(RETRO_LOG_ERROR, "没有找到 '%s' 的默认值, 这是一个错误, 请记述它\n", option_defs_us[idx_var].desc);
 		idx_var++;
 	}
 
 	// Add the cheats core options
 	for (int cheat_idx = 0; cheat_idx < nbr_cheats; cheat_idx++)
 	{
-		option_defs_us[idx_var].category_key     = "cheat";
+		option_defs_us[idx_var].category_key     = "金手指";
 		option_defs_us[idx_var].key              = cheat_core_options[cheat_idx].option_name.c_str();
 		option_defs_us[idx_var].desc             = cheat_core_options[cheat_idx].friendly_name.c_str();
 		option_defs_us[idx_var].desc_categorized = cheat_core_options[cheat_idx].friendly_name_categorized.c_str();
 		option_defs_us[idx_var].default_value    = cheat_core_options[cheat_idx].default_value.c_str();
-		option_defs_us[idx_var].info             = "Specific to the running romset and your cheat database";
+		option_defs_us[idx_var].info             = "在游戏中使用, 前提你有对应的金手指文件";
 		for (int cheat_value_idx = 0; cheat_value_idx < cheat_core_options[cheat_idx].values.size(); cheat_value_idx++)
 		{
 			option_defs_us[idx_var].values[cheat_value_idx].value = cheat_core_options[cheat_idx].values[cheat_value_idx].friendly_name.c_str();
@@ -768,24 +773,24 @@ void set_environment()
 	static struct retro_core_option_v2_category option_cats_us[] =
 	{
 		{
-			"frameskip",
-			"Frameskip Settings",
-			"Configure Frameskip Settings"
+			"跳帧",
+			"跳帧设置",
+			"配置跳帧设置"
 		},
 		{
-			"audio",
-			"Audio Settings",
-			"Configure Audio Settings"
+			"音频",
+			"音频设置",
+			"配置音频设置"
 		},
 		{
-			"dipswitch",
-			"DIP Switches",
-			"Configure DIP Switches"
+			"DIP 开关",
+			"DIP 开关",
+			"配置 DIP 开关"
 		},
 		{
-			"cheat",
-			"Cheat",
-			"Enable Cheats"
+			"金手指",
+			"金手指",
+			"启用金手指"
 		},
 #ifdef FBNEO_DEBUG
 		{
@@ -1003,7 +1008,7 @@ void check_variables(void)
 	var.key = var_fbneo_allow_depth_32.key;
 	if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE, &var) && var.value)
 	{
-		if (strcmp(var.value, "enabled") == 0)
+		if (strcmp(var.value, "启用") == 0)
 			bAllowDepth32 = true;
 		else
 			bAllowDepth32 = false;
@@ -1012,9 +1017,9 @@ void check_variables(void)
 	var.key = var_fbneo_vertical_mode.key;
 	if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE, &var) && var.value)
 	{
-		if (strcmp(var.value, "enabled") == 0)
+		if (strcmp(var.value, "启用") == 0)
 			nVerticalMode = 1;
-		else if (strcmp(var.value, "alternate") == 0)
+		else if (strcmp(var.value, "备用") == 0)
 			nVerticalMode = 2;
 		else
 			nVerticalMode = 0;
@@ -1025,13 +1030,13 @@ void check_variables(void)
 		var.key = var_fbneo_frameskip_type.key;
 		if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE, &var) && var.value)
 		{
-			if (strcmp(var.value, "disabled") == 0)
+			if (strcmp(var.value, "禁用") == 0)
 				nFrameskipType = 0;
-			else if (strcmp(var.value, "Fixed") == 0)
+			else if (strcmp(var.value, "固定") == 0)
 				nFrameskipType = 1;
-			else if (strcmp(var.value, "Auto") == 0)
+			else if (strcmp(var.value, "自动") == 0)
 				nFrameskipType = 2;
-			else if (strcmp(var.value, "Manual") == 0)
+			else if (strcmp(var.value, "手动") == 0)
 				nFrameskipType = 3;
 		}
 
