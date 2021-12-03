@@ -7618,11 +7618,11 @@ static struct BurnRomInfo kov2pfwllRomDesc[] = {
 	{ "b1200.rom",					0x0800000, 0xbed7d994, 4 | BRF_GRA },			//  7 Sprite Masks & Color Indexes
 	{ "b1201.rom",					0x0800000, 0xf251eb57, 4 | BRF_GRA },			//  8
 
-	{ "m1200.rom",					0x0800000, 0xa95e06b6, 5 | BRF_SND },			//  9 Samples
+	{ "m1200.rom",					0x0800000, 0xb0d88720, 5 | BRF_SND },			//  9 Samples
 
-	{ "kov2p_arm.rom",		0x0004000, 0x19a0bd95, 7 | BRF_PRG | BRF_ESS }, // 10 Internal ARM7 Rom
+	{ "kov2p_arm.rom",		0x0004000, 0x06214503, 7 | BRF_PRG | BRF_ESS }, // 10 Internal ARM7 Rom
 
-	{ "v200-16.rom",				0x0200000, 0x16a0c11f, 8 | BRF_PRG | BRF_ESS }, // 11 External ARM7 Rom
+	{ "v200-16.rom",				0x0200000, 0xb77ae68e, 8 | BRF_PRG | BRF_ESS }, // 11 External ARM7 Rom
 };
 
 STDROMPICKEXT(kov2pfwll, kov2pfwll, pgm)
