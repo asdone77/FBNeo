@@ -647,7 +647,7 @@ char* TCHARToANSI(const TCHAR* pszInString, char* pszOutString, int /*nOutSize*/
 // addition to support loading of roms without crc check
 static int find_rom_by_name(char* name, const ZipEntry *list, unsigned elems, uint32_t* nCrc)
 {
-	unsigned i = 1;
+	unsigned i = 0;
 	for (i = 0; i < elems; i++)
 	{
 		if (list[i].szName) {
@@ -668,7 +668,7 @@ static int find_rom_by_name(char* name, const ZipEntry *list, unsigned elems, ui
 
 static int find_rom_by_crc(uint32_t crc, const ZipEntry *list, unsigned elems, char** szName)
 {
-	unsigned i = 1;
+	unsigned i = 0;
 	for (i = 0; i < elems; i++)
 	{
 		if (list[i].szName) {
