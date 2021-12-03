@@ -80,11 +80,6 @@ static const struct retro_core_option_v2_definition var_fbneo_allow_depth_32 = {
 	NULL,
 	{
 		{ "禁用", NULL },
-		{ "启用", NULL },",
-	NULL,
-	NULL,
-	{
-		{ "禁用", NULL },
 		{ "启用", NULL },
 		{ NULL, NULL },
 	},
@@ -111,7 +106,7 @@ static const struct retro_core_option_v2_definition var_fbneo_fixed_frameskip = 
 	NULL,
 	"当“跳帧”设置为“固定”时，或者如果前端不支持替代的“跳帧”模式，则以固定速率跳过渲染，即X+1中的X帧",
 	NULL,
-	"frameskip",
+	"跳帧",
 	{
 		{ "0", "不要跳过" },
 		{ "1", "跳过渲染2帧中的1帧" },
