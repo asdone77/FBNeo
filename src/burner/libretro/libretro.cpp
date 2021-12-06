@@ -286,8 +286,8 @@ void retro_get_system_info(struct retro_system_info *info)
 
 	sprintf(library_version, "v%x.%x.%x.%02x %s", nBurnVer >> 20, (nBurnVer >> 16) & 0x0F, (nBurnVer >> 8) & 0xFF, nBurnVer & 0xFF, GIT_VERSION);
 
-	info->library_name = "FBNhack";
-	info->library_version = "严禁将本核心编译后使用在收费或者挂有募捐名义的项目中！";
+	info->library_name = APP_TITLE;
+	info->library_version = strdup(library_version);
 	info->need_fullpath = true;
 	info->block_extract = true;
 	info->valid_extensions = "zip|7z|cue|ccd";
