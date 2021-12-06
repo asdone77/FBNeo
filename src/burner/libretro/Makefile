@@ -58,7 +58,7 @@ MAIN_FBNEO_DIR	:= ../..
 VERSION_SCRIPT	:= $(MAIN_FBNEO_DIR)/burner/libretro/link.T
 
 # TARGET
-TARGET_NAME := fbalpha2012
+TARGET_NAME := fbneo
 
 # Unix
 ifneq (,$(findstring unix,$(platform)))
