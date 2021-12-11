@@ -7459,7 +7459,6 @@ struct BurnDriver BurnDrvkovlsyxqszl = {
 	448, 224, 4, 3
 };
 
-
 // Luan Shi Ying Xiong - Qun Xiong Zhu Lu (hack of Knights of Valour Super Heroes Plus, ver. 500)
 // This set is known as kovsho101 in HBMAME
 
@@ -7495,9 +7494,7 @@ struct BurnDriver BurnDrvkovlsyxqxzl = {
 	448, 224, 4, 3
 };
 
-
-// Luan Shi Ying Xiong - Qun Xiong Zhu Lu Plus (hack of Knights of Valour Super Heroes Plus, ver. 500)
-// This set is known as kovsho102 in HBMAME
+// 三国战纪 乱世英雄 群雄逐鹿 加强版 (Hack)
 
 static struct BurnRomInfo kovlsyxqxzlpRomDesc[] = {
 	{ "p0600h_101_po102.rom",		0x0400000, 0x9f1274ff, 1 | BRF_PRG | BRF_ESS }, //  0 68K Code
@@ -7530,7 +7527,6 @@ struct BurnDriver BurnDrvkovlsyxqxzlp = {
 	kovassgaInit, pgmExit, pgmFrame, pgmDraw, pgmScan, &nPgmPalRecalc, 0x900,
 	448, 224, 4, 3
 };
-
 
 // Knights of Valour Super Heroes / Yi Tong Zhong Yuan Qing Ban (2020-A, hack)
 // Hack by FEITIANXUE
@@ -8153,7 +8149,7 @@ struct BurnDriver BurnDrvkovytzywscw = {
 	NULL, NULL, NULL, NULL,
 	BDF_GAME_WORKING | BDF_CLONE | BDF_BOOTLEG | BDF_HACK, 4, HARDWARE_IGS_PGM | HARDWARE_IGS_USE_ARM_CPU, GBF_SCRFIGHT, 0,
 	NULL, kovytzywscwRomInfo, kovytzywscwRomName, NULL, NULL, NULL, NULL, pgmInputInfo, kovassgaDIPInfo,  
-	kovshpInit, pgmExit, pgmFrame, pgmDraw, pgmScan, &nPgmPalRecalc, 0x900,
+	kovassgaInit, pgmExit, pgmFrame, pgmDraw, pgmScan, &nPgmPalRecalc, 0x900,
 	448, 224, 4, 3
 };
 
@@ -8361,39 +8357,68 @@ struct BurnDriver BurnDrvkov2pxgs = {
 	448, 224, 4, 3
 };
 
-// 盖世群雄 (Hack)
+// 三国战纪 正宗2012 王者秒杀 (Hack)
 
-static struct BurnRomInfo kov2pgsRomDesc[] = {
-	{ "v204-32m.rom",				0x0400000, 0x8015801F, 1 | BRF_PRG | BRF_ESS }, //  0 68K Code
+static struct BurnRomInfo kovkingRomDesc[] = {
+	{ "new_kovking.119",			0x0400000, 0x7bd5067e, 1 | BRF_PRG | BRF_ESS }, //  0 68K Code
 
-	{ "t1200.rom",					0x0800000, 0xd7e26609, 2 | BRF_GRA },			//  1 Tile data
+	{ "t0600.rom",			0x0800000, 0x4acc1ad6, 2 | BRF_GRA },			//  1 Tile data
 
-	{ "a1200.rom",					0x0800000, 0xCEEB81D8, 3 | BRF_GRA },			//  2 Sprite Color Data
-	{ "a1201.rom",					0x0800000, 0x21063ca7, 3 | BRF_GRA },			//  3
-	{ "a1202.rom",					0x0800000, 0x4BB92FAE, 3 | BRF_GRA },			//  4
-	{ "a1203.rom",					0x0800000, 0xE73CB627, 3 | BRF_GRA },			//  5
-	{ "a1204.rom",					0x0200000, 0x14B4B5BB, 3 | BRF_GRA },			//  6
+	{ "a0600.rom",			0x0800000, 0x3aa14383, 3 | BRF_GRA },			//  2 Sprite Color Data
+	{ "a0601.rom",			0x0800000, 0xff7a4373, 3 | BRF_GRA }, 	        //  3 
+	{ "a0602.rom",			0x0800000, 0xe7a32959, 3 | BRF_GRA }, 	        //  4
+	{ "a0603.rom",			0x0400000, 0xec31abda, 3 | BRF_GRA }, 	        //  5
 
-	{ "b1200.rom",					0x0800000, 0xBED7D994, 4 | BRF_GRA },			//  7 Sprite Masks & Color Indexes
-	{ "b1201.rom",					0x0800000, 0xF251EB57, 4 | BRF_GRA },			//  8
+	{ "b0600.rom",	   		0x0800000, 0x8d0b67ea, 4 | BRF_GRA },			//  6 Sprite Masks & Color Indexes
+	{ "b0601.rom",	   		0x0400000, 0xa0bb1c2f, 4 | BRF_GRA },			//  7
+	
+	{ "m0600.rom",			0x0400000, 0x3ada4fd6, 5 | BRF_SND },			// 8 Samples
 
-	{ "m1200.rom",					0x0800000, 0xB0D88720, 5 | BRF_SND },			//  9 Samples
-
-	{ "kov2p_igs027a_china.bin",		0x0004000, 0x06214503, 7 | BRF_PRG | BRF_ESS }, // 10 Internal ARM7 Rom
-
-	{ "v200-16.rom",				0x0200000, 0xC27D1CE1, 8 | BRF_PRG | BRF_ESS }, // 11 External ARM7 Rom
+	{ "kovsh_v100_china.asic", 	0x0004000, 0x00000000, 7 | BRF_PRG | BRF_ESS },	// 9 Internal ARM7 Rom
 };
 
-STDROMPICKEXT(kov2pgs, kov2pgs, pgm)
-STD_ROM_FN(kov2pgs)
+STDROMPICKEXT(kovking, kovking, pgm)
+STD_ROM_FN(kovking)
 
-struct BurnDriver BurnDrvkov2pgs = {
-	"kov2pgs", "kov2p", "pgm", NULL, "2021",
-	"盖世群雄 (Hack)\0", NULL, "Hack", "PolyGameMaster",
+struct BurnDriver BurnDrvkovking = {
+	"kovking", "kovplus", "pgm", NULL, "2018",
+	"三国战纪 正宗2012 王者秒杀 (Hack)\0", "Imperfect Protection Emulation", "Hack", "PolyGameMaster",
 	NULL, NULL, NULL, NULL,
-	BDF_GAME_WORKING | BDF_CLONE | BDF_HACK, 4, HARDWARE_IGS_PGM | HARDWARE_IGS_USE_ARM_CPU, GBF_SCRFIGHT, 0,
-	NULL, kov2pgsRomInfo, kov2pgsRomName, NULL, NULL, NULL, NULL, pgmInputInfo, kovassgaDIPInfo,
-	kov2pInit, pgmExit, pgmFrame, pgmDraw, pgmScan, &nPgmPalRecalc, 0x900,
+	BDF_GAME_WORKING | BDF_CLONE | BDF_HACK, 4, HARDWARE_IGS_PGM, GBF_SCRFIGHT, 0,
+	NULL, kovkingRomInfo,kovkingRomName, NULL, NULL, NULL, NULL, pgmInputInfo, kovassgaDIPInfo,
+        kovInit, pgmExit, pgmFrame, pgmDraw, pgmScan, &nPgmPalRecalc, 0x900,
 	448, 224, 4, 3
 };
 
+// 三国战纪 正宗2007 (Hack)
+
+static struct BurnRomInfo kovplsRomDesc[] = {
+	{ "p0600.119",     		0x0400000, 0x1dde3567, 1 | BRF_PRG | BRF_ESS }, //  0 68K Code
+
+	{ "pgm_t0600.u11",     			0x0800000, 0x4acc1ad6, 2 | BRF_GRA },			//  1 Tile data
+	
+	{ "pgm_a0600.u2",     			0x0800000, 0xd8167834, 3 | BRF_GRA },			//  2 Sprite Color Data
+	{ "pgm_a0601.u4",   			0x0800000, 0xff7a4373, 3 | BRF_GRA },			//  3
+	{ "pgm_a0602.u6",     			0x0800000, 0xe7a32959, 3 | BRF_GRA },			//  4
+	{ "pgm_a0603.u9",     			0x0400000, 0xec31abda, 3 | BRF_GRA },			//  5
+	
+	{ "pgm_b0600.u5",     			0x0800000, 0x7d3cd059, 4 | BRF_GRA },			//  6 Sprite Masks & Color Indexes
+	{ "pgm_b0601.u7",     			0x0400000, 0xa0bb1c2f, 4 | BRF_GRA },			//  7
+	
+	{ "pgm_m0600.u3",     			0x0400000, 0x3ada4fd6, 5 | BRF_SND },			//  8 Samples
+	
+	{ "kov_igs027a.bin", 			0x0004000, 0x00000000, 7 | BRF_PRG | BRF_ESS | BRF_NODUMP },  //  9 Internal ARM7 Rom
+};
+
+STDROMPICKEXT(kovpls, kovpls, pgm)
+STD_ROM_FN(kovpls)
+
+struct BurnDriver BurnDrvkovpls = {
+	"kovpls", "kovplus", "pgm", NULL, "1999",
+	"三国战纪 正宗2007 (Hack)\0", "no PLUS on screen when set to KOREA", "IGS", "PolyGameMaster",
+	NULL, NULL, NULL, NULL,
+	BDF_GAME_WORKING | BDF_CLONE | BDF_HACK, 4, HARDWARE_IGS_PGM, GBF_SCRFIGHT, 0,
+	NULL, kovplsRomInfo, kovplsRomName, NULL, NULL, NULL, NULL, pgmInputInfo, kovassgaDIPInfo,
+	kovInit, pgmExit, pgmFrame, pgmDraw, pgmScan, &nPgmPalRecalc, 0x900,
+	448, 224, 4, 3
+};
