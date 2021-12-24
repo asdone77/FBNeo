@@ -50,8 +50,8 @@ int kNetGame = 0;
 INT32 nReplayStatus = 0;
 INT32 nIpsMaxFileLen = 0;
 unsigned nGameType = 0;
-static INT32 nGameWidth = 640;
-static INT32 nGameHeight = 480;
+static INT32 nGameWidth = 800;
+static INT32 nGameHeight = 600;
 static INT32 nGameMaximumGeometry;
 static INT32 nNextGeometryCall = RETRO_ENVIRONMENT_SET_GEOMETRY;
 
@@ -1662,16 +1662,41 @@ static bool retro_load_game_common()
 #endif
 
 		if (!open_archive()) {
+
+			const char* s1 = "This game is known but one of your romsets is missing files for THIS VERSION of FBNeo.\n";
+			static char s2[256];
+			const char* rom_name = "";
+			const char* sp1 = "";
+			const char* parent_name = "";
+			const char* sp2 = "";
+			const char* bios_name = "";
+			if (BurnDrvGetTextA(DRV_NAME))
+			{
+				rom_name = BurnDrvGetTextA(DRV_NAME);
+			}
+			if (BurnDrvGetTextA(DRV_PARENT))
+			{
+				sp1 = " ";
+				parent_name = BurnDrvGetTextA(DRV_PARENT);
+			}
+			if (BurnDrvGetTextA(DRV_BOARDROM))
+			{
+				sp2 = " ";
+				bios_name = BurnDrvGetTextA(DRV_BOARDROM);
+			}
+			sprintf(s2, "Verify the following romsets : %s%s%s%s%s\n", rom_name, sp1, parent_name, sp2, bios_name);
+			const char* s3 = "To fix this, read https://docs.libretro.com/library/fbneo/#building-romsets-for-fbneo.\n";
 #ifdef INCLUDE_7Z_SUPPORT
-			SetUguiError("This romset is known but yours doesn't match this emulator and its version\nRead https://docs.libretro.com/library/fbneo/#building-romsets-for-fbneo");
+			const char* s4 = "\n";
 #else
-			SetUguiError("This romset is known but yours doesn't match this emulator and its version\nNote that 7z support is disabled for your platform\nRead https://docs.libretro.com/library/fbneo/#building-romsets-for-fbneo");
+			const char* s4 = "Note that 7z support is disabled for your platform.\n\n";
 #endif
-			HandleMessage(RETRO_LOG_ERROR, "[FBNeo] This romset is known but yours doesn't match this emulator and its version\n");
-#ifndef INCLUDE_7Z_SUPPORT
-			HandleMessage(RETRO_LOG_ERROR, "[FBNeo] Note that 7z support is disabled for your platform\n");
-#endif
-			HandleMessage(RETRO_LOG_ERROR, "[FBNeo] Read https://docs.libretro.com/library/fbneo/#building-romsets-for-fbneo\n");
+			const char* s5 = "THIS IS NOT A BUG SO PLEASE DON'T WASTE EVERYONE'S TIME BY REPORTING THIS !\n";
+
+			static char uguiText[1024];
+			sprintf(uguiText, "%s%s%s%s%s", s1, s2, s3, s4, s5);
+			SetUguiError(uguiText);
+
 			goto end;
 		}
 		HandleMessage(RETRO_LOG_INFO, "[FBNeo] No missing files, proceeding\n");
@@ -2284,9 +2309,9 @@ INT32 BurnStateSave(TCHAR* szName, INT32 bAll)
 	}
 }
 
-char* DecorateGameName(UINT32 nBurnDrv)
+char* GameDecoration(UINT32 nBurnDrv)
 {
-	static char szDecoratedName[256];
+	static char szGameDecoration[256];
 	UINT32 nOldBurnDrv = nBurnDrvActive;
 
 	nBurnDrvActive = nBurnDrv;
@@ -2302,53 +2327,47 @@ char* DecorateGameName(UINT32 nBurnDrv)
 	const char* s9 = "";
 	const char* s10 = "";
 	const char* s11 = "";
-	const char* s12 = "";
-	const char* s13 = "";
-	const char* s14 = "";
 
-	s1 = BurnDrvGetTextA(DRV_FULLNAME);
 	if ((BurnDrvGetFlags() & BDF_DEMO) || (BurnDrvGetFlags() & BDF_HACK) || (BurnDrvGetFlags() & BDF_HOMEBREW) || (BurnDrvGetFlags() & BDF_PROTOTYPE) || (BurnDrvGetFlags() & BDF_BOOTLEG) || (BurnDrvGetTextA(DRV_COMMENT) && strlen(BurnDrvGetTextA(DRV_COMMENT)) > 0)) {
-		s2 = " [";
 		if (BurnDrvGetFlags() & BDF_DEMO) {
-			s3 = "Demo";
+			s1 = "Demo";
 			if ((BurnDrvGetFlags() & BDF_HACK) || (BurnDrvGetFlags() & BDF_HOMEBREW) || (BurnDrvGetFlags() & BDF_PROTOTYPE) || (BurnDrvGetFlags() & BDF_BOOTLEG) || (BurnDrvGetTextA(DRV_COMMENT) && strlen(BurnDrvGetTextA(DRV_COMMENT)) > 0)) {
-				s4 = ", ";
+				s2 = ", ";
 			}
 		}
 		if (BurnDrvGetFlags() & BDF_HACK) {
-			s5 = "Hack";
+			s3 = "Hack";
 			if ((BurnDrvGetFlags() & BDF_HOMEBREW) || (BurnDrvGetFlags() & BDF_PROTOTYPE) || (BurnDrvGetFlags() & BDF_BOOTLEG) || (BurnDrvGetTextA(DRV_COMMENT) && strlen(BurnDrvGetTextA(DRV_COMMENT)) > 0)) {
-				s6 = ", ";
+				s4 = ", ";
 			}
 		}
 		if (BurnDrvGetFlags() & BDF_HOMEBREW) {
-			s7 = "Homebrew";
+			s5 = "Homebrew";
 			if ((BurnDrvGetFlags() & BDF_PROTOTYPE) || (BurnDrvGetFlags() & BDF_BOOTLEG) || (BurnDrvGetTextA(DRV_COMMENT) && strlen(BurnDrvGetTextA(DRV_COMMENT)) > 0)) {
-				s8 = ", ";
+				s6 = ", ";
 			}
 		}
 		if (BurnDrvGetFlags() & BDF_PROTOTYPE) {
-			s9 = "Prototype";
+			s7 = "Prototype";
 			if ((BurnDrvGetFlags() & BDF_BOOTLEG) || (BurnDrvGetTextA(DRV_COMMENT) && strlen(BurnDrvGetTextA(DRV_COMMENT)) > 0)) {
-				s10 = ", ";
+				s8 = ", ";
 			}
 		}		
 		if (BurnDrvGetFlags() & BDF_BOOTLEG) {
-			s11 = "Bootleg";
+			s9 = "Bootleg";
 			if (BurnDrvGetTextA(DRV_COMMENT) && strlen(BurnDrvGetTextA(DRV_COMMENT)) > 0) {
-				s12 = ", ";
+				s10 = ", ";
 			}
 		}
 		if (BurnDrvGetTextA(DRV_COMMENT) && strlen(BurnDrvGetTextA(DRV_COMMENT)) > 0) {
-			s13 = BurnDrvGetTextA(DRV_COMMENT);
+			s11 = BurnDrvGetTextA(DRV_COMMENT);
 		}
-		s14 = "]";
 	}
 
-	sprintf(szDecoratedName, "%s%s%s%s%s%s%s%s%s%s%s%s%s%s", s1, s2, s3, s4, s5, s6, s7, s8, s9, s10, s11, s12, s13, s14);
+	sprintf(szGameDecoration, "%s%s%s%s%s%s%s%s%s%s%s", s1, s2, s3, s4, s5, s6, s7, s8, s9, s10, s11);
 
 	nBurnDrvActive = nOldBurnDrv;
-	return szDecoratedName;
+	return szGameDecoration;
 }
 
 #ifdef LIGHT

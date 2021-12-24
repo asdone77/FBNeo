@@ -4,7 +4,6 @@
 // thanks to research by Haze & peterferrie, thoop stg. 4 crash is fixed!
 // first Haze came up with a ram patch, next day peterferrie did some deeper
 // debugging and found all's needed is refresh rate of 57.3 - 57.7.  congrats guys!
-// (I chose the midean value of 57.5 until someone scopes a board for the real value) -dink
 
 #include "tiles_generic.h"
 #include "m68000_intf.h"
@@ -47,6 +46,7 @@ static INT32 nOkiBank;
 
 static INT32 gaelco_encryption_param1;
 static INT32 has_sound_cpu = 0;
+static INT32 sprite_highpri_color;
 
 static struct BurnInputInfo DrvInputList[] = {
 	{"P1 Coin",			BIT_DIGITAL,	DrvJoy1 + 6,	"p1 coin"	},
@@ -854,7 +854,7 @@ static INT32 DrvInit(INT32 (*pRomLoadCallback)(), INT32 encrypted_ram, INT32 sou
 {
 	BurnAllocMemIndex();
 
-	BurnSetRefreshRate(57.5); // Thoop wants this
+	BurnSetRefreshRate(57.42); // Thoop wants this
 
 	if (pRomLoadCallback) {
 		if (pRomLoadCallback()) return 1;
@@ -900,6 +900,8 @@ static INT32 DrvInit(INT32 (*pRomLoadCallback)(), INT32 encrypted_ram, INT32 sou
 	MSM6295SetRoute(0, 1.00, BURN_SND_ROUTE_BOTH);
 
 	gaelco_encryption_param1 = encrypted_ram;
+
+	sprite_highpri_color = 0x38; // default
 
 	GenericTilesInit();
 
@@ -992,7 +994,11 @@ static INT32 ThoopInit()
 
 static INT32 SquashInit()
 {
-	return DrvInit(SquashRomLoad,	0x0f, 0);
+	INT32 rc = DrvInit(SquashRomLoad,	0x0f, 0);
+	if (!rc) {
+		sprite_highpri_color = 0x3c;
+	}
+	return rc;
 }
 
 static INT32 BiomtoyInit()
@@ -1042,7 +1048,7 @@ static void draw_sprites()
 		INT32 yflip = attr & 0x40;
 		INT32 spr_size, pri_mask;
 
-		if (color >= 0x38) priority = 4;
+		if (color >= sprite_highpri_color) priority = 4;
 
 		switch (priority)
 		{
@@ -1180,7 +1186,7 @@ static INT32 DrvFrame()
 	}
 
 	INT32 nInterleave = 512;
-	INT32 nCyclesTotal[1] =  { (INT32)(12000000 / 57.5) };
+	INT32 nCyclesTotal[1] =  { (INT32)(12000000 / 57.42) };
 	INT32 nCyclesDone[1] = { nExtraCycles[0] };
 
 	SekOpen(0);
@@ -1203,7 +1209,7 @@ static INT32 DrvFrame()
 	}
 
 	if (pBurnDraw) {
-		DrvDraw();
+		BurnDrvRedraw();
 	}
 
 	return 0;
@@ -1229,7 +1235,7 @@ static INT32 BigkarnkFrame()
 	}
 
 	INT32 nInterleave = 512;
-	INT32 nCyclesTotal[2] =  { (INT32)(10000000 / 57.5), (INT32)(2216750 / 57.5) };
+	INT32 nCyclesTotal[2] =  { (INT32)(10000000 / 57.42), (INT32)(2216750 / 57.42) };
 	INT32 nCyclesDone[2] = { nExtraCycles[0], 0 };
 
 	SekOpen(0);
@@ -1595,7 +1601,7 @@ struct BurnDriver BurnDrvThoop = {
 	NULL, NULL, NULL, NULL,
 	BDF_GAME_WORKING, 2, HARDWARE_MISC_POST90S, GBF_RUNGUN, 0,
 	NULL, thoopRomInfo, thoopRomName, NULL, NULL, NULL, NULL, DrvInputInfo, ThoopDIPInfo,
-	ThoopInit, DrvExit, DrvFrame, DrvDraw, DrvScan, &DrvRecalc, 0x400,
+	ThoopInit, DrvExit, DrvFrame, BigkarnkDraw, DrvScan, &DrvRecalc, 0x400,
 	320, 240, 4, 3
 };
 
