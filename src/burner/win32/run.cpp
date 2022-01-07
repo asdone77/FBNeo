@@ -723,7 +723,6 @@ int RunMessageLoop()
 										DisplayFPSInit();
 									} else {
 										VidSKillShortMsg();
-										VidSKillOSDMsg();
 									}
 								}
 								break;
@@ -782,7 +781,6 @@ int RunMessageLoop()
 		MediaExit();
 		if (bRestartVideo) {
 			MediaInit();
-			PausedRedraw();
 		}
 	} while (bRestartVideo);
 

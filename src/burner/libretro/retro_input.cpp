@@ -147,7 +147,7 @@ static void AnalyzeGameLayout()
 				nKickInputs[nPlayer][2] = i;
 			}
 
-			if (is_neogeo_game) {
+			if (bIsNeogeoCartGame || (nGameType == RETRO_GAME_TYPE_NEOCD)) {
 				if (_stricmp(" Button A", bii.szName + 2) == 0) {
 					nNeogeoButtons[nPlayer][0] = i;
 				}
@@ -197,7 +197,7 @@ static void AnalyzeGameLayout()
 			pgi++;
 		}
 		// supposedly, those are the 4 most useful neogeo macros
-		if (is_neogeo_game) {
+		if (bIsNeogeoCartGame || (nGameType == RETRO_GAME_TYPE_NEOCD)) {
 			pgi->nInput = GIT_MACRO_AUTO;
 			pgi->nType = BIT_DIGITAL;
 			pgi->Macro.nMode = 0;
@@ -389,11 +389,21 @@ static inline int CinpJoyAxis(int port, int axis)
 
 static inline void CinpDirectCoord(int port, int axis)
 {
-	UINT16 val = (0x7FFF + input_cb_wrapper(port, nDeviceType[port], 0, sAxiBinds[port][axis].id));
-	INT32 width, height;
-	BurnDrvGetVisibleSize(&width, &height);
-	pointerValues[port][axis] = (INT32)((axis == 0 ? width : height) * (double(val)/double(0x10000)));
-	BurnGunSetCoords(port, pointerValues[port][0], pointerValues[port][1]);
+	INT32 is_offscreen = (nDeviceType[port] == RETRO_DEVICE_LIGHTGUN ? input_cb_wrapper(port, RETRO_DEVICE_LIGHTGUN, 0, RETRO_DEVICE_ID_LIGHTGUN_IS_OFFSCREEN) : 0);
+	INT32 val = input_cb_wrapper(port, nDeviceType[port], 0, sAxiBinds[port][axis].id) + 0x7fff;
+	if (val == -1 || is_offscreen == 1)
+	{
+		// we are offscreen and should force coords at (0,0)
+		pointerValues[port][0] = 0;
+		pointerValues[port][1] = 0;
+	}
+	else
+	{
+		INT32 width, height;
+		BurnDrvGetVisibleSize(&width, &height);
+		pointerValues[port][axis] = (INT32)((axis == 0 ? width : height) * (double(val)/double(0x10000)));
+	}
+	BurnGunSetCoords(((BurnDrvGetHardwareCode() & HARDWARE_PUBLIC_MASK) == HARDWARE_NES ? 0 : port), pointerValues[port][0], pointerValues[port][1]);
 }
 
 static inline int CinpMouseAxis(int port, int axis)
@@ -1710,7 +1720,7 @@ static INT32 GameInpSpecialOne(struct GameInp* pgi, INT32 nPlayer, char* szb, ch
 		if (strncmp("Buttons 3x Kick", description, 15) == 0)
 			GameInpDigital2RetroInpKey(pgi, nPlayer, (nDeviceType[nPlayer] == RETROPAD_MODERN ? RETRO_DEVICE_ID_JOYPAD_L2 : RETRO_DEVICE_ID_JOYPAD_R2), description, RETRO_DEVICE_JOYPAD, GIT_MACRO_AUTO);
 	}
-	if (is_neogeo_game) {
+	if (bIsNeogeoCartGame || (nGameType == RETRO_GAME_TYPE_NEOCD)) {
 		if (strncmp("Buttons ABC", description, 11) == 0)
 			GameInpDigital2RetroInpKey(pgi, nPlayer, (nDeviceType[nPlayer] == RETROPAD_MODERN ? RETRO_DEVICE_ID_JOYPAD_L2 : RETRO_DEVICE_ID_JOYPAD_R2), description, RETRO_DEVICE_JOYPAD, GIT_MACRO_AUTO);
 		if (strncmp("Buttons BCD", description, 11) == 0)
@@ -1909,7 +1919,7 @@ static INT32 GameInpSpecialOne(struct GameInp* pgi, INT32 nPlayer, char* szb, ch
 	// Don't map neogeo select button anywhere
 	// See https://neo-source.com/index.php?topic=3490.0
 	// 2019-07-03 : actually, map it to L3, it allows access to a menu in last blade training mode
-	if (strncmp("select", szb, 6) == 0 && is_neogeo_game)
+	if (strncmp("select", szb, 6) == 0 && bIsNeogeoCartGame)
 		GameInpDigital2RetroInpKey(pgi, nPlayer, RETRO_DEVICE_ID_JOYPAD_L3, description);
 
 	return 0;
@@ -1943,7 +1953,7 @@ static INT32 GameInpStandardOne(struct GameInp* pgi, INT32 nPlayer, char* szb, c
 		char *szf = szb + 5;
 		INT32 nButton = strtol(szf, NULL, 0);
 		// "Modern" neogeo stick and gamepad are actually like this, see pictures of arcade stick pro and neogeo mini gamepad
-		if (is_neogeo_game && nDeviceType[nPlayer] == RETROPAD_MODERN) {
+		if ((bIsNeogeoCartGame || (nGameType == RETRO_GAME_TYPE_NEOCD)) && nDeviceType[nPlayer] == RETROPAD_MODERN) {
 			switch (nButton) {
 				case 1:
 					GameInpDigital2RetroInpKey(pgi, nPlayer, RETRO_DEVICE_ID_JOYPAD_Y, description);
@@ -2496,7 +2506,7 @@ void SetControllerInfo()
 {
 	int nHardwareCode = BurnDrvGetHardwareCode();
 
-	if ((nHardwareCode & HARDWARE_PUBLIC_MASK) == HARDWARE_SPECTRUM) {
+	if ((nHardwareCode & HARDWARE_PUBLIC_MASK) == HARDWARE_SPECTRUM || (nHardwareCode & HARDWARE_PUBLIC_MASK) == HARDWARE_MSX) {
 		// Let's have some custom spectrum device handling, so that we can use the keyboard remapping
 		static const struct retro_controller_description joystick_description[] = {
 			{ "Joystick", RETRO_DEVICE_JOYPAD }
@@ -2527,6 +2537,10 @@ void SetControllerInfo()
 			{ "Pointer", RETRO_DEVICE_POINTER },
 			{ "Lightgun", RETRO_DEVICE_LIGHTGUN }
 		};
+
+		// kludge for nes (some 1p game want to use p2 controls)
+		if (nMaxPlayers < 2 && (nHardwareCode & HARDWARE_PUBLIC_MASK) == HARDWARE_NES)
+			nMaxPlayers = 2;
 
 		// Prepare enough controllers for everything
 		nMaxControllers = nMaxPlayers + nMahjongKeyboards;
@@ -2686,7 +2700,7 @@ static void BurnerHandlerKeyCallback()
 
 	// Send inputs
 	while (keyMatrix[i][0] != '\0') {
-		if(input_cb_wrapper(0, RETRO_DEVICE_KEYBOARD, 0, keyMatrix[i][1]) == 1)
+		if(input_cb_wrapper(2, RETRO_DEVICE_KEYBOARD, 0, keyMatrix[i][1]) == 1)
 			cBurnerKeyCallback(keyMatrix[i][0], KeyType, 1);
 		else
 			cBurnerKeyCallback(keyMatrix[i][0], KeyType, 0);
@@ -2822,8 +2836,11 @@ void InputMake(void)
 
 void RefreshLightgunCrosshair()
 {
-	for (int i = 0; i < MAX_GUNS; i++)
-		bBurnGunHide[i] = (bLightgunHideCrosshairEnabled && nDeviceType[i] == RETRO_DEVICE_LIGHTGUN);
+	if ((BurnDrvGetHardwareCode() & HARDWARE_PUBLIC_MASK) == HARDWARE_NES)
+		bBurnGunHide[0] = (bLightgunHideCrosshairEnabled && nDeviceType[1] == RETRO_DEVICE_LIGHTGUN);
+	else
+		for (int i = 0; i < MAX_GUNS; i++)
+			bBurnGunHide[i] = (bLightgunHideCrosshairEnabled && nDeviceType[i] == RETRO_DEVICE_LIGHTGUN);
 }
 
 void InputInit()
@@ -2870,9 +2887,9 @@ void retro_set_input_state(retro_input_state_t cb) { input_cb = cb; }
 void retro_set_input_poll(retro_input_poll_t cb) { poll_cb = cb; }
 void retro_set_controller_port_device(unsigned port, unsigned device)
 {
-#if 1
 	// Retroarch is ignoring what i want, so let's force valid values
-	if (nBurnDrvActive != ~0U && (BurnDrvGetHardwareCode() & HARDWARE_PUBLIC_MASK) == HARDWARE_SPECTRUM)
+	int nHardwareCode = BurnDrvGetHardwareCode();
+	if (nBurnDrvActive != ~0U && ((nHardwareCode & HARDWARE_PUBLIC_MASK) == HARDWARE_SPECTRUM || (nHardwareCode & HARDWARE_PUBLIC_MASK) == HARDWARE_MSX))
 	{
 		switch(port)
 		{
@@ -2906,7 +2923,6 @@ void retro_set_controller_port_device(unsigned port, unsigned device)
 			HandleMessage(RETRO_LOG_INFO, "[FBNeo] Unknown device type for port %d, forcing \"Classic\" instead\n", port);
 		}
 	}
-#endif
 
 	if (port < nMaxControllers && nDeviceType[port] != device)
 	{
