@@ -28,6 +28,11 @@
 #define STAT_SMALL   3
 #define STAT_LARGE   4
 
+#ifdef LIGHT
+#undef APP_TITLE
+#define APP_TITLE "FinalBurn Neo Light"
+#endif
+
 int counter;           // General purpose variable used when debugging
 struct MovieExtInfo
 {
@@ -76,6 +81,7 @@ static UINT8* pVidImage = NULL;
 static bool bVidImageNeedRealloc = false;
 static bool bRotationDone = false;
 static int16_t *pAudBuffer = NULL;
+static char text_missing_files[2048] = "";
 
 // Frameskipping v2 Support
 #define FRAMESKIP_MAX 30
@@ -896,6 +902,7 @@ static bool open_archive()
 		set_neo_system_bios();
 
 	// Going over every rom to see if they are properly loaded before we continue ...
+	bool ret = true;
 	for (unsigned i = 0; i < nRomCount; i++)
 	{
 		if (pRomFind[i].nState != STAT_OK)
@@ -905,15 +912,18 @@ static bool open_archive()
 			BurnDrvGetRomInfo(&ri, i);
 			if(!(ri.nType & BRF_OPT))
 			{
+				static char prev[1024];
+				strcpy(prev, text_missing_files);
+				sprintf(text_missing_files, "%s\nROM with name %s and CRC 0x%08x is missing", prev, rom_name, ri.nCrc);
 				BurnDrvGetRomName(&rom_name, i, 0);
-				HandleMessage(RETRO_LOG_ERROR, "[FBNeo] ROM at index %d with name %s and CRC 0x%08x is required ...\n", i, rom_name, ri.nCrc);
-				return false;
+				log_cb(RETRO_LOG_ERROR, "[FBNeo] ROM at index %d with name %s and CRC 0x%08x is required\n", i, rom_name, ri.nCrc);
+				ret = false;
 			}
 		}
 	}
 
 	BurnExtLoadRom = archive_load_rom;
-	return true;
+	return ret;
 }
 
 static void SetRotation()
@@ -1081,17 +1091,16 @@ static void VideoBufferInit()
 void retro_run()
 {
 #if 0
-	// Disabled for now since retroarch might not be totally reliable about it ?
+	// Disabled for now because the api call result doesn't seem that much reliable
+	// we probably need a better api implementation for this
 	int nAudioVideoEnable = -1;
 	environ_cb(RETRO_ENVIRONMENT_GET_AUDIO_VIDEO_ENABLE, &nAudioVideoEnable);
 
-	// Only draw when required by frontend or core
+	// Draw when the "Enable Video" bit is enabled or the game has the BDF_RUNAHEAD_DRAWSYNC flag
 	pBurnDraw = ((BurnDrvGetFlags() & BDF_RUNAHEAD_DRAWSYNC) || (nAudioVideoEnable & 1)) ? pVidImage : NULL;
-	// Disabling audio seems broken in retroarch at the moment with runahead,
-	// i think it's playing back sound from all frames it ran or something, even when it says it won't,
-	// 2-instances with its hard-disabled-audio seems ok
-	// pBurnSoundOut = nAudioVideoEnable & 2 && !(nAudioVideoEnable & 8) ? pAudBuffer : NULL;
-	pBurnSoundOut = !(nAudioVideoEnable & 8) ? pAudBuffer : NULL;
+	// The "Enable Audio" bit doesn't seem to work properly at the moment (with runahead, is it used in another context ?),
+	// actually it might be doing the opposite of what api says, because rendering audio when retroarch says to disable it seems to work
+	pBurnSoundOut = !(nAudioVideoEnable & 2) || !(nAudioVideoEnable & 8) ? pAudBuffer : NULL;
 #else
 	pBurnDraw = pVidImage; // set to NULL to skip frame rendering
 	pBurnSoundOut = pAudBuffer; // set to NULL to skip sound rendering
@@ -1690,8 +1699,8 @@ static bool retro_load_game_common()
 #endif
 			const char* s5 = "THIS IS NOT A BUG SO PLEASE DON'T WASTE EVERYONE'S TIME BY REPORTING THIS !\n";
 
-			static char uguiText[1024];
-			sprintf(uguiText, "%s%s%s%s%s", s1, s2, s3, s4, s5);
+			static char uguiText[4096];
+			sprintf(uguiText, "%s%s%s\n\n%s%s%s", s1, s2, text_missing_files, s3, s4, s5);
 			SetUguiError(uguiText);
 
 			goto end;
