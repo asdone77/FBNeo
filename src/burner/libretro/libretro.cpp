@@ -293,7 +293,7 @@ void retro_get_system_info(struct retro_system_info *info)
 	sprintf(library_version, "v%x.%x.%x.%02x %s", nBurnVer >> 20, (nBurnVer >> 16) & 0x0F, (nBurnVer >> 8) & 0xFF, nBurnVer & 0xFF, GIT_VERSION);
 
 	info->library_name = APP_TITLE;
-	info->library_version = strdup(library_version);
+	info->library_version = "核心选项汉化 by PENG // 禁止挂在任何EMUELEC整合包内!!!";
 	info->need_fullpath = true;
 	info->block_extract = true;
 	info->valid_extensions = "zip|7z|cue|ccd";
@@ -424,7 +424,14 @@ static int create_variables_from_dipswitches()
 				// Filter away NULL entries
 				if (bdi_value.nFlags == 0)
 				{
-					HandleMessage(RETRO_LOG_WARN, "Error in %sDIPList for DIPSWITCH '%s': the line '%d' is useless\n", drvname, dip_option->friendly_name.c_str(), k + 1);
+#if 0
+					//HandleMessage(RETRO_LOG_WARN, "Error in %sDIPList for DIPSWITCH '%s': the line '%d' is useless\n", drvname, dip_option->friendly_name.c_str(), k + 1);
+					// visibility should be toggled off if cond_pgi->Input.nVal & nCondMask != nCondSetting ?
+					dipswitch_core_option_value *prev_dip_value = &dip_option->values[values_count-1];
+					prev_dip_value->cond_pgi = pgi_value;
+					prev_dip_value->nCondMask = bdi_value.nMask;
+					prev_dip_value->nCondSetting = bdi_value.nSetting;
+#endif
 					continue;
 				}
 
@@ -618,17 +625,15 @@ void Reinitialise(void)
 	nNextGeometryCall = RETRO_ENVIRONMENT_SET_GEOMETRY;
 }
 
-static void ForceFrameStep(bool bSkip)
+static void ForceFrameStep()
 {
 #ifdef FBNEO_DEBUG
 	nFramesEmulated++;
 #endif
 	nCurrentFrame++;
 
-	if (bSkip)
-		pBurnDraw = NULL;
 #ifdef FBNEO_DEBUG
-	else
+	if (pBurnDraw != NULL)
 		nFramesRendered++;
 #endif
 	BurnDrvFrame();
@@ -741,10 +746,10 @@ static void locate_archive(std::vector<located_archive>& pathList, const char* c
 			located->path = path;
 			located->ignoreCrc = true;
 			ZipClose();
-			HandleMessage(RETRO_LOG_INFO, "[FBNeo] Patched romset found at %s\n", path);
+			HandleMessage(RETRO_LOG_INFO, "[FBNeo] 发现romset替代品 %s\n", path);
 		}
 		else
-			HandleMessage(RETRO_LOG_INFO, "[FBNeo] No patched romset found at %s\n", path);
+			HandleMessage(RETRO_LOG_INFO, "[FBNeo] 未发现romset替代品 %s\n", path);
 	}
 	// Search rom dir
 	snprintf_nowarn(path, sizeof(path), "%s%c%s", g_rom_dir, PATH_DEFAULT_SLASH_C(), romName);
@@ -755,10 +760,10 @@ static void locate_archive(std::vector<located_archive>& pathList, const char* c
 		located->path = path;
 		located->ignoreCrc = false;
 		ZipClose();
-		HandleMessage(RETRO_LOG_INFO, "[FBNeo] Romset found at %s\n", path);
+		HandleMessage(RETRO_LOG_INFO, "[FBNeo] 发现 Romset %s\n", path);
 	}
 	else
-		HandleMessage(RETRO_LOG_INFO, "[FBNeo] No romset found at %s\n", path);
+		HandleMessage(RETRO_LOG_INFO, "[FBNeo] 未发现 romset %s\n", path);
 	// Search system fbneo subdirectory (where samples/hiscore are stored)
 	snprintf_nowarn(path, sizeof(path), "%s%cfbneo%c%s", g_system_dir, PATH_DEFAULT_SLASH_C(), PATH_DEFAULT_SLASH_C(), romName);
 	if (ZipOpen(path) == 0)
@@ -768,10 +773,10 @@ static void locate_archive(std::vector<located_archive>& pathList, const char* c
 		located->path = path;
 		located->ignoreCrc = false;
 		ZipClose();
-		HandleMessage(RETRO_LOG_INFO, "[FBNeo] Romset found at %s\n", path);
+		HandleMessage(RETRO_LOG_INFO, "[FBNeo] 发现 Romset %s\n", path);
 	}
 	else
-		HandleMessage(RETRO_LOG_INFO, "[FBNeo] No romset found at %s\n", path);
+		HandleMessage(RETRO_LOG_INFO, "[FBNeo] 未发现 romset %s\n", path);
 	// Search system directory
 	snprintf_nowarn(path, sizeof(path), "%s%c%s", g_system_dir, PATH_DEFAULT_SLASH_C(), romName);
 	if (ZipOpen(path) == 0)
@@ -781,10 +786,10 @@ static void locate_archive(std::vector<located_archive>& pathList, const char* c
 		located->path = path;
 		located->ignoreCrc = false;
 		ZipClose();
-		HandleMessage(RETRO_LOG_INFO, "[FBNeo] Romset found at %s\n", path);
+		HandleMessage(RETRO_LOG_INFO, "[FBNeo] 发现 Romset %s\n", path);
 	}
 	else
-		HandleMessage(RETRO_LOG_INFO, "[FBNeo] No romset found at %s\n", path);
+		HandleMessage(RETRO_LOG_INFO, "[FBNeo] 未发现 romset %s\n", path);
 }
 
 // This code is very confusing. The original code is even more confusing :(
@@ -914,8 +919,8 @@ static bool open_archive()
 			{
 				static char prev[1024];
 				strcpy(prev, text_missing_files);
-				sprintf(text_missing_files, "%s\nROM with name %s and CRC 0x%08x is missing", prev, rom_name, ri.nCrc);
 				BurnDrvGetRomName(&rom_name, i, 0);
+				sprintf(text_missing_files, "%s\nROM with name %s and CRC 0x%08x is missing", prev, rom_name, ri.nCrc);
 				log_cb(RETRO_LOG_ERROR, "[FBNeo] ROM at index %d with name %s and CRC 0x%08x is required\n", i, rom_name, ri.nCrc);
 				ret = false;
 			}
@@ -1066,7 +1071,8 @@ void retro_reset()
 	if (bIsNeogeoCartGame)
 		set_neo_system_bios();
 
-	ForceFrameStep(1);
+	pBurnDraw = NULL;
+	ForceFrameStep();
 
 	// Loading minimal savestate (handle some machine settings)
 	if (bIsNeogeoCartGame && BurnStateLoad(g_autofs_path, 0, NULL) == 0)
@@ -1090,20 +1096,48 @@ static void VideoBufferInit()
 
 void retro_run()
 {
-#if 0
-	// Disabled for now because the api call result doesn't seem that much reliable
-	// we probably need a better api implementation for this
-	int nAudioVideoEnable = -1;
-	environ_cb(RETRO_ENVIRONMENT_GET_AUDIO_VIDEO_ENABLE, &nAudioVideoEnable);
+	int nAudioVideoEnable = 0;
+	bool bEnableVideo = true;
+	bool bEmulateAudio = true;
+	bool bPresentAudio = true;
 
-	// Draw when the "Enable Video" bit is enabled or the game has the BDF_RUNAHEAD_DRAWSYNC flag
-	pBurnDraw = ((BurnDrvGetFlags() & BDF_RUNAHEAD_DRAWSYNC) || (nAudioVideoEnable & 1)) ? pVidImage : NULL;
-	// The "Enable Audio" bit doesn't seem to work properly at the moment (with runahead, is it used in another context ?),
-	// actually it might be doing the opposite of what api says, because rendering audio when retroarch says to disable it seems to work
-	pBurnSoundOut = !(nAudioVideoEnable & 2) || !(nAudioVideoEnable & 8) ? pAudBuffer : NULL;
-#else
-	pBurnDraw = pVidImage; // set to NULL to skip frame rendering
-	pBurnSoundOut = pAudBuffer; // set to NULL to skip sound rendering
+#ifndef FBNEO_DEBUG
+	// Setting RA's video or audio driver to null will disable video/audio bits,
+	// however that's a problem because i do batch run with video/audio disabled to detect asan issues 
+	if (environ_cb(RETRO_ENVIRONMENT_GET_AUDIO_VIDEO_ENABLE, &nAudioVideoEnable))
+	{
+		// Video is required when "Enable Video" bit is set
+		// or the game has the BDF_RUNAHEAD_DRAWSYNC flag
+		bEnableVideo = (nAudioVideoEnable & 1) || (BurnDrvGetFlags() & BDF_RUNAHEAD_DRAWSYNC);
+#if 0
+		// It needs to be set in a runahead context for the "runahead" frame (in single instance, it should be the frame that run the video, not sure about 2-instances)
+		// but retroarch will only tell us if video is required or not (which will always be true in a non-runahead context), it won't tell if runahead is enabled
+		// It would fix usage of hiscore.dat and cheat.dat, and possibly remove jitter with emulated gun
+		// note that the hack that force disable hiscores for fast savestates (see retro_serialize and other related functions) would also need to be removed
+		bBurnRunAheadFrame = 1;
+#endif
+
+		// Audio status is more complex:
+		// - If "Hard Disable Audio" bit is set, then audio
+		//   should not be emulated, and nothing should be
+		//   presented to the frontend
+		// - If "Hard Disable Audio" bit is not set, then
+		//   we need to check the "Enable Audio" bit
+		//   > If this is set, then audio should be emulated
+		//     and presented to the frontend
+		//   > If this is not set, then audio should not be
+		//     presented to the frontend - but audio should
+		//     be generated normally on the *next* frame,
+		//     and saving/loading states should operate
+		//     without issue. This means audio must still
+		//     be emulated for the *current* frame
+		// Note: "Hard Disable Audio" bit will only be set
+		// when using second instance runahead
+		if (nAudioVideoEnable & 8) // "Hard Disable Audio"
+			bEmulateAudio = bPresentAudio = false;
+		else
+			bPresentAudio = (nAudioVideoEnable & 2); // "Enable Audio"
+	}
 #endif
 
 	bool bSkipFrame = false;
@@ -1164,23 +1198,29 @@ void retro_run()
 		bUpdateAudioLatency = false;
 	}
 
-	ForceFrameStep(bSkipFrame);
+	pBurnDraw = bEnableVideo && !bSkipFrame ? pVidImage : NULL; // Set to NULL to skip frame rendering
+	pBurnSoundOut = bEmulateAudio ? pAudBuffer : NULL; // Set to NULL to skip sound rendering
 
-	if (bLowPassFilterEnabled)
-		DspDo(pAudBuffer, nBurnSoundLen);
-	audio_batch_cb(pAudBuffer, nBurnSoundLen);
-	bool updated = false;
+	ForceFrameStep();
+
+	if (bPresentAudio)
+	{
+		if (bLowPassFilterEnabled)
+			DspDo(pBurnSoundOut, nBurnSoundLen);
+		audio_batch_cb(pBurnSoundOut, nBurnSoundLen);
+	}
 
 	if (bVidImageNeedRealloc)
 	{
 		bVidImageNeedRealloc = false;
 		VideoBufferInit();
 		// current frame will be corrupted, let's dupe instead
-		video_cb(NULL, nGameWidth, nGameHeight, nBurnPitch);
+		pBurnDraw = NULL;
 	}
-	else
-		video_cb(pVidImage, nGameWidth, nGameHeight, nBurnPitch);
 
+	video_cb(pBurnDraw, nGameWidth, nGameHeight, nBurnPitch);
+
+	bool updated = false;
 	if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE_UPDATE, &updated) && updated)
 	{
 		UINT32 old_nVerticalMode = nVerticalMode;
@@ -1655,7 +1695,7 @@ static bool retro_load_game_common()
 		nSpriteEnable = 0xff;
 
 		// Create cheats core options
-		create_variables_from_cheats();
+		create_variables_from_cheats();	
 
 		set_environment();
 		check_variables();
@@ -1669,7 +1709,7 @@ static bool retro_load_game_common()
 
 		if (!open_archive()) {
 
-			const char* s1 = "This game is known but one of your romsets is missing files for THIS VERSION of FBNeo.\n";
+			const char* s1 = "核心选项汉化 by PENG //这个已知的游戏,但Romset其中部分与本版本不符.\n";
 			static char s2[256];
 			const char* rom_name = "";
 			const char* sp1 = "";
@@ -1690,14 +1730,14 @@ static bool retro_load_game_common()
 				sp2 = " ";
 				bios_name = BurnDrvGetTextA(DRV_BOARDROM);
 			}
-			sprintf(s2, "Verify the following romsets : %s%s%s%s%s\n", rom_name, sp1, parent_name, sp2, bios_name);
-			const char* s3 = "To fix this, read https://docs.libretro.com/library/fbneo/#building-romsets-for-fbneo.\n";
+			sprintf(s2, "核心选项汉化 by PENG // 验证以下romsets : %s%s%s%s%s\n", rom_name, sp1, parent_name, sp2, bios_name);
+			const char* s3 = "要解决这个问题, 请阅读 https://docs.libretro.com/library/fbneo/#building-romsets-for-fbneo.\n";
 #ifdef INCLUDE_7Z_SUPPORT
 			const char* s4 = "\n";
 #else
-			const char* s4 = "Note that 7z support is disabled for your platform.\n\n";
+			const char* s4 = "请注意,您的平台禁用了7z支持.\n\n";
 #endif
-			const char* s5 = "THIS IS NOT A BUG SO PLEASE DON'T WASTE EVERYONE'S TIME BY REPORTING THIS !\n";
+			const char* s5 = "这不是一个错误,所以请不要通过报告这个来浪费大家的时间 !\n";
 
 			static char uguiText[4096];
 			sprintf(uguiText, "%s%s%s\n\n%s%s%s", s1, s2, text_missing_files, s3, s4, s5);
@@ -1705,24 +1745,24 @@ static bool retro_load_game_common()
 
 			goto end;
 		}
-		HandleMessage(RETRO_LOG_INFO, "[FBNeo] No missing files, proceeding\n");
+		HandleMessage(RETRO_LOG_INFO, "[FBNeo] 没有丢失文件, 继续\n");
 
 		// Announcing to fbneo which samplerate we want
 		// Some game drivers won't initialize with an undefined nBurnSoundLen
 		nBurnSoundRate = g_audio_samplerate;
 		AudioBufferInit(nBurnSoundRate, 6000);
-		HandleMessage(RETRO_LOG_INFO, "[FBNeo] Samplerate set to %d\n", nBurnSoundRate);
+		HandleMessage(RETRO_LOG_INFO, "[FBNeo] 采样率设置为 %d\n", nBurnSoundRate);
 
 		// Start CD reader emulation if needed
 		if (nGameType == RETRO_GAME_TYPE_NEOCD) {
 			if (CDEmuInit()) {
-				HandleMessage(RETRO_LOG_INFO, "[FBNeo] Starting neogeo CD\n");
+				HandleMessage(RETRO_LOG_INFO, "[FBNeo] 启动 neogeo CD\n");
 			}
 		}
 
 		// Apply dipswitches
 		apply_dipswitches_from_variables();
-		HandleMessage(RETRO_LOG_INFO, "[FBNeo] Applied dipswitches from core options\n");
+		HandleMessage(RETRO_LOG_INFO, "[FBNeo] 从核心选项应用dip开关\n");
 
 		// Override the NeoGeo bios DIP Switch by the main one (for the moment)
 		if (bIsNeogeoCartGame)
@@ -1730,12 +1770,12 @@ static bool retro_load_game_common()
 
 		// Initialize game driver
 		if(BurnDrvInit() == 0)
-			HandleMessage(RETRO_LOG_INFO, "[FBNeo] Initialized driver for %s\n", g_driver_name);
+			HandleMessage(RETRO_LOG_INFO, "[FBNeo] 初始化驱动程序 %s\n", g_driver_name);
 		else
 		{
-			SetUguiError("Failed initializing driver\nThis is unexpected, you should probably report it.");
-			HandleMessage(RETRO_LOG_ERROR, "[FBNeo] Failed initializing driver.\n");
-			HandleMessage(RETRO_LOG_ERROR, "[FBNeo] This is unexpected, you should probably report it.\n");
+			SetUguiError("初始化驱动程序失败\n这是意外情况, 你可以决定是否上报.");
+			HandleMessage(RETRO_LOG_ERROR, "[FBNeo] 初始化驱动程序失败.\n");
+			HandleMessage(RETRO_LOG_ERROR, "[FBNeo] 这是意外情况, 你可以决定是否上报.\n");
 			goto end;
 		}
 
@@ -1749,7 +1789,7 @@ static bool retro_load_game_common()
 
 		// Now we know real game fps, let's initialize sound buffer again
 		AudioBufferInit(nBurnSoundRate, nBurnFPS);
-		HandleMessage(RETRO_LOG_INFO, "[FBNeo] Adjusted audio buffer to match driver's refresh rate (%f Hz)\n", (nBurnFPS/100.0f));
+		HandleMessage(RETRO_LOG_INFO, "[FBNeo] 调整音频缓冲区 以匹配驱动程序的刷新率 (%f Hz)\n", (nBurnFPS/100.0f));
 
 		// Expose Ram for cheevos/cheats support
 		CheevosInit();
@@ -1757,7 +1797,7 @@ static bool retro_load_game_common()
 		// Loading minimal savestate (handle some machine settings)
 		snprintf_nowarn (g_autofs_path, sizeof(g_autofs_path), "%s%cfbneo%c%s.fs", g_save_dir, PATH_DEFAULT_SLASH_C(), PATH_DEFAULT_SLASH_C(), BurnDrvGetTextA(DRV_NAME));
 		if (BurnStateLoad(g_autofs_path, 0, NULL) == 0) {
-			HandleMessage(RETRO_LOG_INFO, "[FBNeo] EEPROM succesfully loaded from %s\n", g_autofs_path);
+			HandleMessage(RETRO_LOG_INFO, "[FBNeo] EEPROM 成功加载 %s\n", g_autofs_path);
 			// eeproms are loading nCurrentFrame, but we probably don't want this
 			nCurrentFrame = 0;
 		}
@@ -1774,20 +1814,20 @@ static bool retro_load_game_common()
 		VideoBufferInit();
 
 		if (pVidImage == NULL) {
-			HandleMessage(RETRO_LOG_ERROR, "[FBNeo] Failed allocating framebuffer memory\n");
+			HandleMessage(RETRO_LOG_ERROR, "[FBNeo] 分配帧缓冲到内存失败\n");
 			goto end;
 		}
 
 		apply_cheats_from_variables();
 
 		// Initialization done
-		HandleMessage(RETRO_LOG_INFO, "[FBNeo] Driver %s was successfully started : game's full name is %s\n", g_driver_name, BurnDrvGetTextA(DRV_FULLNAME));
+		HandleMessage(RETRO_LOG_INFO, "[FBNeo] 驱动程序 %s 已成功启动 : 游戏的全称是 %s\n", g_driver_name, BurnDrvGetTextA(DRV_FULLNAME));
 	}
 	else
 	{
-		SetUguiError("Romset is unknown\nRead https://docs.libretro.com/library/fbneo/#building-romsets-for-fbneo");
-		HandleMessage(RETRO_LOG_ERROR, "[FBNeo] Romset is unknown\n");
-		HandleMessage(RETRO_LOG_ERROR, "[FBNeo] Read https://docs.libretro.com/library/fbneo/#building-romsets-for-fbneo\n");
+		SetUguiError("核心选项汉化 by PENG //[FBNeo] 这个 Romset 是未知\n请阅读 https://docs.libretro.com/library/fbneo/#building-romsets-for-fbneo");
+		HandleMessage(RETRO_LOG_ERROR, "[FBNeo] 核心选项汉化 by PENG //[FBNeo] 这个 Romset 是未知\n");
+		HandleMessage(RETRO_LOG_ERROR, "[FBNeo] 请阅读 https://docs.libretro.com/library/fbneo/#building-romsets-for-fbneo\n");
 		goto end;
 	}
 	return true;

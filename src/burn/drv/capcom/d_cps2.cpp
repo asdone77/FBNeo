@@ -6618,6 +6618,40 @@ static struct BurnRomInfo Sfz3teRomDesc[] = {
 STD_ROM_PICK(Sfz3te)
 STD_ROM_FN(Sfz3te)
 
+// Street Fighter Zero 3 Mix v0.09 (hacked by Zero800)
+// https://sfz3mix.github.io/
+
+static struct BurnRomInfo Sfz3mixRomDesc[] = {
+	{ "sfz3mix.03",    0x080000, 0x22962e92, CPS2_PRG_68K | BRF_ESS | BRF_PRG },
+	{ "sfz3mix.04",    0x080000, 0x10ed184d, CPS2_PRG_68K | BRF_ESS | BRF_PRG },
+	{ "sfz3mix.05",    0x080000, 0x99964fde, CPS2_PRG_68K | BRF_ESS | BRF_PRG },
+	{ "sfz3mix.06",    0x080000, 0x2a63f25f, CPS2_PRG_68K | BRF_ESS | BRF_PRG },
+	{ "sfz3mix.07",    0x080000, 0x7bfc7d3f, CPS2_PRG_68K | BRF_ESS | BRF_PRG },
+	{ "sfz3mix.08",    0x080000, 0xa6d60e7a, CPS2_PRG_68K | BRF_ESS | BRF_PRG },
+	{ "sfz3mix.09",    0x080000, 0xb1973865, CPS2_PRG_68K | BRF_ESS | BRF_PRG },
+	{ "sfz3mix.10",    0x080000, 0x851002e1, CPS2_PRG_68K | BRF_ESS | BRF_PRG },
+
+	{ "sfz3mix.13m",   0x400000, 0x71d4cee0, CPS2_GFX | BRF_GRA },
+	{ "sfz3mix.15m",   0x400000, 0x4985b5cd, CPS2_GFX | BRF_GRA },
+	{ "sfz3mix.17m",   0x400000, 0x181eee89, CPS2_GFX | BRF_GRA },
+	{ "sfz3mix.19m",   0x400000, 0xc496ea94, CPS2_GFX | BRF_GRA },
+	{ "sfz3mix.14m",   0x400000, 0xe96ce6cc, CPS2_GFX | BRF_GRA },
+	{ "sfz3mix.16m",   0x400000, 0xb15d2507, CPS2_GFX | BRF_GRA },
+	{ "sfz3mix.18m",   0x400000, 0xb52f88f3, CPS2_GFX | BRF_GRA },
+	{ "sfz3mix.20m",   0x400000, 0x8c7b3fa3, CPS2_GFX | BRF_GRA },
+
+	{ "sz3.01",        0x020000, 0xde810084, CPS2_PRG_Z80 | BRF_ESS | BRF_PRG },
+	{ "sz3.02",        0x020000, 0x72445dc4, CPS2_PRG_Z80 | BRF_ESS | BRF_PRG },
+
+	{ "sz3.11m",       0x400000, 0x1c89eed1, CPS2_QSND | BRF_SND },
+	{ "sz3.12m",       0x400000, 0xf392b13a, CPS2_QSND | BRF_SND },
+	
+	{ "phoenix.key",   0x000014, 0x2cf772b0, CPS2_ENCRYPTION_KEY },
+};
+
+STD_ROM_PICK(Sfz3mix)
+STD_ROM_FN(Sfz3mix)
+
 static struct BurnRomInfo SgemfRomDesc[] = {
 	{ "pcfu.03",       0x080000, 0xac2e8566, CPS2_PRG_68K | BRF_ESS | BRF_PRG },
 	{ "pcf.04",        0x080000, 0xf4314c96, CPS2_PRG_68K | BRF_ESS | BRF_PRG },
@@ -7578,33 +7612,33 @@ STD_ROM_PICK(Ssf2th)
 STD_ROM_FN(Ssf2th)
 
 static struct BurnRomInfo Ssf2tnlRomDesc[] = {
-	{ "sfxe.03c",      0x080000, 0x70c01f45, CPS2_PRG_68K | BRF_ESS | BRF_PRG },
-	{ "sfxe.04a",      0x080000, 0x08d8e5c6, CPS2_PRG_68K | BRF_ESS | BRF_PRG },
-	{ "sfxe.05",       0x080000, 0x8149324a, CPS2_PRG_68K | BRF_ESS | BRF_PRG },
-	{ "sfxe.06a",      0x080000, 0xb6e40ec8, CPS2_PRG_68K | BRF_ESS | BRF_PRG },
-	{ "sfxe.07",       0x080000, 0x9ea93262, CPS2_PRG_68K | BRF_ESS | BRF_PRG },
-	{ "sfxe.08",       0x080000, 0xac0f3088, CPS2_PRG_68K | BRF_ESS | BRF_PRG },
-	{ "sfx.09",        0x080000, 0xe2752a05, CPS2_PRG_68K | BRF_ESS | BRF_PRG },
+	{ "sfxe.03c",      0x080000, 0x46722af4, CPS2_PRG_68K | BRF_ESS | BRF_PRG },
+	{ "sfxe.04a",      0x080000, 0xc8167018, CPS2_PRG_68K | BRF_ESS | BRF_PRG },
+	{ "sfxe.05",       0x080000, 0x244be873, CPS2_PRG_68K | BRF_ESS | BRF_PRG },
+	{ "sfxe.06a",      0x080000, 0x3a7f1f24, CPS2_PRG_68K | BRF_ESS | BRF_PRG },
+	{ "sfxe.07",       0x080000, 0xaf0babd3, CPS2_PRG_68K | BRF_ESS | BRF_PRG },
+	{ "sfxe.08",       0x080000, 0x2c717380, CPS2_PRG_68K | BRF_ESS | BRF_PRG },
+	{ "sfx.09",        0x080000, 0xaf970b89, CPS2_PRG_68K | BRF_ESS | BRF_PRG },
 
-	{ "sfx.13m",       0x200000, 0xd7456444, CPS2_GFX | BRF_GRA },
-	{ "sfx.15m",       0x200000, 0xfb5b1890, CPS2_GFX | BRF_GRA },
-	{ "sfx.17m",       0x200000, 0x40a8dbad, CPS2_GFX | BRF_GRA },
-	{ "sfx.19m",       0x200000, 0x740f32cc, CPS2_GFX | BRF_GRA },
+	{ "sfx.13m",       0x200000, 0xc74a5e1c, CPS2_GFX | BRF_GRA },
+	{ "sfx.15m",       0x200000, 0xd666749d, CPS2_GFX | BRF_GRA },
+	{ "sfx.17m",       0x200000, 0x378925a1, CPS2_GFX | BRF_GRA },
+	{ "sfx.19m",       0x200000, 0x41187858, CPS2_GFX | BRF_GRA },
 	{ "sfx.14m",       0x100000, 0x1a6e6aa9, CPS2_GFX | BRF_GRA },
 	{ "sfx.16m",       0x100000, 0x0f6251bd, CPS2_GFX | BRF_GRA },
 	{ "sfx.18m",       0x100000, 0x8b1eccaf, CPS2_GFX | BRF_GRA },
 	{ "sfx.20m",       0x100000, 0x26eb0233, CPS2_GFX | BRF_GRA },
-	{ "sfx.21m",       0x100000, 0xf2153d42, CPS2_GFX | BRF_GRA },
-	{ "sfx.23m",       0x100000, 0xa25a0007, CPS2_GFX | BRF_GRA },
-	{ "sfx.25m",       0x100000, 0xc75be82e, CPS2_GFX | BRF_GRA },
-	{ "sfx.27m",       0x100000, 0x3d0ce365, CPS2_GFX | BRF_GRA },
+	{ "sfx.21m",       0x100000, 0x40144981, CPS2_GFX | BRF_GRA },
+	{ "sfx.23m",       0x100000, 0x49953e2c, CPS2_GFX | BRF_GRA },
+	{ "sfx.25m",       0x100000, 0x8c7ef38b, CPS2_GFX | BRF_GRA },
+	{ "sfx.27m",       0x100000, 0x9ad47db1, CPS2_GFX | BRF_GRA },
 
 	{ "sfx.01",        0x020000, 0xb47b8835, CPS2_PRG_Z80 | BRF_ESS | BRF_PRG },
 	{ "sfx.02",        0x020000, 0x0022633f, CPS2_PRG_Z80 | BRF_ESS | BRF_PRG },
 
 	{ "sfx.11m",       0x200000, 0x9bdbd476, CPS2_QSND | BRF_SND },
 	{ "sfx.12m",       0x200000, 0xa05e3aab, CPS2_QSND | BRF_SND },
-	
+
 	{ "ssf2t.key",     0x000014, 0x524d608e, CPS2_ENCRYPTION_KEY },
 };
 
@@ -11121,6 +11155,16 @@ struct BurnDriver BurnDrvCpsSfz3te = {
 	&CpsRecalcPal, 0x1000, 384, 224, 4, 3
 };
 
+struct BurnDriver BurnDrvCpsSfzmix = {
+	"sfz3mix", "sfa3", NULL, NULL, "2022",
+	"Street Fighter Zero 3 Mix v0.09\0", NULL, "hack", "CPS2",
+	NULL, NULL, NULL, NULL,
+	BDF_GAME_WORKING | BDF_CLONE | BDF_HACK | BDF_HISCORE_SUPPORTED, 2, HARDWARE_CAPCOM_CPS2, GBF_VSFIGHT, FBF_SF,
+	NULL, Sfz3mixRomInfo, Sfz3mixRomName, NULL, NULL, NULL, NULL, Cps2FightingInputInfo, NULL,
+	Cps2Init, DrvExit, Cps2Frame, CpsRedraw, CpsAreaScan,
+	&CpsRecalcPal, 0x1000, 384, 224, 4, 3
+};
+
 struct BurnDriver BurnDrvCpsSgemf = {
 	"sgemf", NULL, NULL, NULL, "1997",
 	"Super Gem Fighter Mini Mix (970904 USA)\0", NULL, "Capcom", "CPS2",
@@ -11442,8 +11486,8 @@ struct BurnDriver BurnDrvCpsSsf2ta = {
 };
 
 struct BurnDriver BurnDrvCpsSsf2tnl = {
-	"ssf2tnl", "ssf2t", NULL, NULL, "2021",
-	"Super Street Fighter II Turbo New Legacy v0.5 (Beta) (Hack by Born2SPD)\0", NULL, "hack", "CPS2",
+	"ssf2tnl", "ssf2t", NULL, NULL, "2022",
+	"Super Street Fighter II Turbo New Legacy v0.6 (Beta) (Hack by Born2SPD)\0", NULL, "hack", "CPS2",
 	NULL, NULL, NULL, NULL,
 	BDF_GAME_WORKING | BDF_CLONE | BDF_HACK | BDF_HISCORE_SUPPORTED, 2, HARDWARE_CAPCOM_CPS2, GBF_VSFIGHT, FBF_SF,
 	NULL, Ssf2tnlRomInfo, Ssf2tnlRomName, NULL, NULL, NULL, NULL, Cps2FightingInputInfo, NULL,

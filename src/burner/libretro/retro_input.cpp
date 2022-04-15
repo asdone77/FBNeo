@@ -1762,6 +1762,18 @@ static INT32 GameInpSpecialOne(struct GameInp* pgi, INT32 nPlayer, char* szb, ch
 		}
 	}
 
+	// Caliber 50
+	if ((parentrom && strcmp(parentrom, "calibr50") == 0) ||
+		(drvname && strcmp(drvname, "calibr50") == 0)
+	) {
+		if (strcmp("Aim X", description) == 0) {
+			GameInpAnalog2RetroInpAnalog(pgi, nPlayer, RETRO_DEVICE_ID_ANALOG_X, RETRO_DEVICE_INDEX_ANALOG_RIGHT, description);
+		}
+		if (strcmp("Aim Y", description) == 0) {
+			GameInpAnalog2RetroInpAnalog(pgi, nPlayer, RETRO_DEVICE_ID_ANALOG_Y, RETRO_DEVICE_INDEX_ANALOG_RIGHT, description);
+		}
+	}
+
 	if (bStreetFighterLayout) {
 		if (strncmp("Buttons 3x Punch", description, 16) == 0)
 			GameInpDigital2RetroInpKey(pgi, nPlayer, (nDeviceType[nPlayer] == RETROPAD_MODERN ? RETRO_DEVICE_ID_JOYPAD_L : RETRO_DEVICE_ID_JOYPAD_L2), description, RETRO_DEVICE_JOYPAD, GIT_MACRO_AUTO);
@@ -1968,6 +1980,10 @@ static INT32 GameInpSpecialOne(struct GameInp* pgi, INT32 nPlayer, char* szb, ch
 	// See https://neo-source.com/index.php?topic=3490.0
 	// 2019-07-03 : actually, map it to L3, it allows access to a menu in last blade training mode
 	if (strncmp("select", szb, 6) == 0 && bIsNeogeoCartGame)
+		GameInpDigital2RetroInpKey(pgi, nPlayer, RETRO_DEVICE_ID_JOYPAD_L3, description);
+
+	// map VS unisystem select button to L3
+	if (strncmp("select", szb, 6) == 0 && (nHardwareCode & HARDWARE_PUBLIC_MASK) == HARDWARE_NVS)
 		GameInpDigital2RetroInpKey(pgi, nPlayer, RETRO_DEVICE_ID_JOYPAD_L3, description);
 
 	return 0;
@@ -2285,21 +2301,31 @@ static INT32 GameInpOtherOne(struct GameInp* pgi, char* szi, char *szn)
 		}
 	}
 
-	// Qix service buttons are somehow needed
+	// Service buttons needed for service menu navigation on qix hardware
 	if ((parentrom && strcmp(parentrom, "qix") == 0) ||
-		(drvname && strcmp(drvname, "qix") == 0)
+		(drvname && strcmp(drvname, "qix") == 0) ||
+		(parentrom && strcmp(parentrom, "complexx") == 0) ||
+		(drvname && strcmp(drvname, "complexx") == 0) ||
+		(parentrom && strcmp(parentrom, "kram") == 0) ||
+		(drvname && strcmp(drvname, "kram") == 0) ||
+		(parentrom && strcmp(parentrom, "elecyoyo") == 0) ||
+		(drvname && strcmp(drvname, "elecyoyo") == 0) ||
+		(parentrom && strcmp(parentrom, "sdungeon") == 0) ||
+		(drvname && strcmp(drvname, "sdungeon") == 0) ||
+		(parentrom && strcmp(parentrom, "zookeep") == 0) ||
+		(drvname && strcmp(drvname, "zookeep") == 0)
 	) {
 		if (strcmp("Test Advance", szn) == 0) {
-			GameInpDigital2RetroInpKey(pgi, 0, RETRO_DEVICE_ID_JOYPAD_Y, szn);
+			GameInpDigital2RetroInpKey(pgi, 0, RETRO_DEVICE_ID_JOYPAD_R2, szn);
 		}
 		if (strcmp("Test Next Line", szn) == 0) {
-			GameInpDigital2RetroInpKey(pgi, 0, RETRO_DEVICE_ID_JOYPAD_X, szn);
+			GameInpDigital2RetroInpKey(pgi, 0, RETRO_DEVICE_ID_JOYPAD_L2, szn);
 		}
 		if (strcmp("Test Slew Up", szn) == 0) {
-			GameInpDigital2RetroInpKey(pgi, 0, RETRO_DEVICE_ID_JOYPAD_R, szn);
+			GameInpDigital2RetroInpKey(pgi, 0, RETRO_DEVICE_ID_JOYPAD_R3, szn);
 		}
 		if (strcmp("Test Slew Down", szn) == 0) {
-			GameInpDigital2RetroInpKey(pgi, 0, RETRO_DEVICE_ID_JOYPAD_L, szn);
+			GameInpDigital2RetroInpKey(pgi, 0, RETRO_DEVICE_ID_JOYPAD_L3, szn);
 		}
 	}
 
@@ -2323,7 +2349,7 @@ static INT32 GameInpOtherOne(struct GameInp* pgi, char* szi, char *szn)
 	}
 
 	// Sega system 24/32's "Service 1" is required to navigate in service menu
-	if ((nHardwareCode & HARDWARE_PUBLIC_MASK) == HARDWARE_SEGA_SYSTEM24 || ((nHardwareCode & HARDWARE_PUBLIC_MASK) == HARDWARE_SEGA_MISC && strcmp(BurnDrvGetTextA(DRV_SYSTEM), "System 32") == 0)) {
+	if ((nHardwareCode & HARDWARE_PUBLIC_MASK) == HARDWARE_SEGA_SYSTEM24 || (nHardwareCode & HARDWARE_PUBLIC_MASK) == HARDWARE_SEGA_SYSTEM32) {
 		if (strcmp("Service 1", szn) == 0) {
 			GameInpDigital2RetroInpKey(pgi, 0, RETRO_DEVICE_ID_JOYPAD_R3, szn);
 		}
@@ -2436,13 +2462,24 @@ INT32 GameInpDefault()
 
 	// Fill all inputs still undefined
 	for (i = 0, pgi = GameInp; i < nGameInpCount; i++, pgi++) {
-		if (pgi->nInput) {											// Already defined - leave it alone
-			continue;
-		}
-
 		// Get the extra info about the input
 		bii.szInfo = NULL;
 		BurnDrvGetInputInfo(&bii, i);
+		if (bii.szName == NULL) {
+			bii.szName = "";
+		}
+
+		// Store the pgis for Neo-Geo Debug Dips
+		if (strcmp(bii.szName, "Debug Dip 1") == 0) {
+			pgi_debug_dip_1 = pgi;
+		}
+		if (strcmp(bii.szName, "Debug Dip 2") == 0) {
+			pgi_debug_dip_2 = pgi;
+		}
+
+		if (pgi->nInput) {											// Already defined - leave it alone
+			continue;
+		}
 		if (bii.pVal == NULL) {
 			continue;
 		}
@@ -2916,6 +2953,8 @@ void InputInit()
 				bAnalogRightMappingDone[i][j][k] = false;
 	pgi_reset = NULL;
 	pgi_diag = NULL;
+	pgi_debug_dip_1 = NULL;
+	pgi_debug_dip_2 = NULL;
 	normal_input_descriptors.clear();
 
 	GameInpInit();

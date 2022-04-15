@@ -40,6 +40,8 @@ struct RomBiosInfo neogeo_bioses[] = {
 std::vector<dipswitch_core_option> dipswitch_core_options;
 struct GameInp *pgi_reset;
 struct GameInp *pgi_diag;
+struct GameInp *pgi_debug_dip_1;
+struct GameInp *pgi_debug_dip_2;
 bool bIsNeogeoCartGame = false;
 bool allow_neogeo_mode = true;
 bool neogeo_use_specific_default_bios = false;
@@ -332,9 +334,9 @@ static const struct retro_core_option_v2_definition var_fbneo_neogeo_mode = {
 	NULL,
 	"根据您的选择加载适当的bios, 前提是bios与正在运行的游戏兼容",
 	NULL,
-	NULL,
+	"neogeo",
 	{
-		{ "DIPSWITCH", "Use bios set in BIOS dipswitch" },
+		{ "DIPSWITCH-区域选择在这里", "Use bios set in BIOS dipswitch" },
 		{ "MVS_EUR", "MVS Europe/Asia (English)" },
 		{ "MVS_USA", "MVS USA (English - Censored)" },
 		{ "MVS_JAP", "MVS Japan (Japanese)" },
@@ -351,11 +353,235 @@ static const struct retro_core_option_v2_definition var_fbneo_memcard_mode = {
 	NULL,
 	"Change the behavior for the memory card",
 	NULL,
-	NULL,
+	"neogeo",
 	{
 		{ "disabled", NULL },
 		{ "shared", NULL },
 		{ "per-game", NULL },
+		{ NULL, NULL },
+	},
+	"disabled"
+};
+static const struct retro_core_option_v2_definition var_fbneo_debug_dip_1_1 = {
+	"fbneo-debug-dip-1-1",
+	"Debug Dip 1_1",
+	NULL,
+	"Enable Debug Dip 1_1",
+	NULL,
+	"neogeo",
+	{
+		{ "disabled", NULL },
+		{ "enabled", NULL },
+		{ NULL, NULL },
+	},
+	"disabled"
+};
+static const struct retro_core_option_v2_definition var_fbneo_debug_dip_1_2 = {
+	"fbneo-debug-dip-1-2",
+	"Debug Dip 1_2",
+	NULL,
+	"Enable Debug Dip 1_2",
+	NULL,
+	"neogeo",
+	{
+		{ "disabled", NULL },
+		{ "enabled", NULL },
+		{ NULL, NULL },
+	},
+	"disabled"
+};
+static const struct retro_core_option_v2_definition var_fbneo_debug_dip_1_3 = {
+	"fbneo-debug-dip-1-3",
+	"Debug Dip 1_3",
+	NULL,
+	"Enable Debug Dip 1_3",
+	NULL,
+	"neogeo",
+	{
+		{ "disabled", NULL },
+		{ "enabled", NULL },
+		{ NULL, NULL },
+	},
+	"disabled"
+};
+static const struct retro_core_option_v2_definition var_fbneo_debug_dip_1_4 = {
+	"fbneo-debug-dip-1-4",
+	"Debug Dip 1_4",
+	NULL,
+	"Enable Debug Dip 1_4",
+	NULL,
+	"neogeo",
+	{
+		{ "disabled", NULL },
+		{ "enabled", NULL },
+		{ NULL, NULL },
+	},
+	"disabled"
+};
+static const struct retro_core_option_v2_definition var_fbneo_debug_dip_1_5 = {
+	"fbneo-debug-dip-1-5",
+	"Debug Dip 1_5",
+	NULL,
+	"Enable Debug Dip 1_5",
+	NULL,
+	"neogeo",
+	{
+		{ "disabled", NULL },
+		{ "enabled", NULL },
+		{ NULL, NULL },
+	},
+	"disabled"
+};
+static const struct retro_core_option_v2_definition var_fbneo_debug_dip_1_6 = {
+	"fbneo-debug-dip-1-6",
+	"Debug Dip 1_6",
+	NULL,
+	"Enable Debug Dip 1_6",
+	NULL,
+	"neogeo",
+	{
+		{ "disabled", NULL },
+		{ "enabled", NULL },
+		{ NULL, NULL },
+	},
+	"disabled"
+};
+static const struct retro_core_option_v2_definition var_fbneo_debug_dip_1_7 = {
+	"fbneo-debug-dip-1-7",
+	"Debug Dip 1_7",
+	NULL,
+	"Enable Debug Dip 1_7",
+	NULL,
+	"neogeo",
+	{
+		{ "disabled", NULL },
+		{ "enabled", NULL },
+		{ NULL, NULL },
+	},
+	"disabled"
+};
+static const struct retro_core_option_v2_definition var_fbneo_debug_dip_1_8 = {
+	"fbneo-debug-dip-1-8",
+	"Debug Dip 1_8",
+	NULL,
+	"Enable Debug Dip 1_8",
+	NULL,
+	"neogeo",
+	{
+		{ "disabled", NULL },
+		{ "enabled", NULL },
+		{ NULL, NULL },
+	},
+	"disabled"
+};
+static const struct retro_core_option_v2_definition var_fbneo_debug_dip_2_1 = {
+	"fbneo-debug-dip-2-1",
+	"Debug Dip 2_1",
+	NULL,
+	"Enable Debug Dip 2_1",
+	NULL,
+	"neogeo",
+	{
+		{ "disabled", NULL },
+		{ "enabled", NULL },
+		{ NULL, NULL },
+	},
+	"disabled"
+};
+static const struct retro_core_option_v2_definition var_fbneo_debug_dip_2_2 = {
+	"fbneo-debug-dip-2-2",
+	"Debug Dip 2_2",
+	NULL,
+	"Enable Debug Dip 2_2",
+	NULL,
+	"neogeo",
+	{
+		{ "disabled", NULL },
+		{ "enabled", NULL },
+		{ NULL, NULL },
+	},
+	"disabled"
+};
+static const struct retro_core_option_v2_definition var_fbneo_debug_dip_2_3 = {
+	"fbneo-debug-dip-2-3",
+	"Debug Dip 2_3",
+	NULL,
+	"Enable Debug Dip 2_3",
+	NULL,
+	"neogeo",
+	{
+		{ "disabled", NULL },
+		{ "enabled", NULL },
+		{ NULL, NULL },
+	},
+	"disabled"
+};
+static const struct retro_core_option_v2_definition var_fbneo_debug_dip_2_4 = {
+	"fbneo-debug-dip-2-4",
+	"Debug Dip 2_4",
+	NULL,
+	"Enable Debug Dip 2_4",
+	NULL,
+	"neogeo",
+	{
+		{ "disabled", NULL },
+		{ "enabled", NULL },
+		{ NULL, NULL },
+	},
+	"disabled"
+};
+static const struct retro_core_option_v2_definition var_fbneo_debug_dip_2_5 = {
+	"fbneo-debug-dip-2-5",
+	"Debug Dip 2_5",
+	NULL,
+	"Enable Debug Dip 2_5",
+	NULL,
+	"neogeo",
+	{
+		{ "disabled", NULL },
+		{ "enabled", NULL },
+		{ NULL, NULL },
+	},
+	"disabled"
+};
+static const struct retro_core_option_v2_definition var_fbneo_debug_dip_2_6 = {
+	"fbneo-debug-dip-2-6",
+	"Debug Dip 2_6",
+	NULL,
+	"Enable Debug Dip 2_6",
+	NULL,
+	"neogeo",
+	{
+		{ "disabled", NULL },
+		{ "enabled", NULL },
+		{ NULL, NULL },
+	},
+	"disabled"
+};
+static const struct retro_core_option_v2_definition var_fbneo_debug_dip_2_7 = {
+	"fbneo-debug-dip-2-7",
+	"Debug Dip 2_7",
+	NULL,
+	"Enable Debug Dip 2_7",
+	NULL,
+	"neogeo",
+	{
+		{ "disabled", NULL },
+		{ "enabled", NULL },
+		{ NULL, NULL },
+	},
+	"disabled"
+};
+static const struct retro_core_option_v2_definition var_fbneo_debug_dip_2_8 = {
+	"fbneo-debug-dip-2-8",
+	"Debug Dip 2_8",
+	NULL,
+	"Enable Debug Dip 2_8",
+	NULL,
+	"neogeo",
+	{
+		{ "disabled", NULL },
+		{ "enabled", NULL },
 		{ NULL, NULL },
 	},
 	"disabled"
@@ -652,19 +878,18 @@ void set_environment()
 	// Add the Global core options
 	vars_systems.push_back(&var_fbneo_allow_depth_32);
 	vars_systems.push_back(&var_fbneo_vertical_mode);
-	if (BurnDrvGetFlags() & BDF_HISCORE_SUPPORTED)
-		vars_systems.push_back(&var_fbneo_hiscores);
 	vars_systems.push_back(&var_fbneo_allow_patched_romsets);
 	vars_systems.push_back(&var_fbneo_analog_speed);
 	vars_systems.push_back(&var_fbneo_lightgun_hide_crosshair);
+	vars_systems.push_back(&var_fbneo_cpu_speed_adjust);
 #ifdef USE_CYCLONE
 	vars_systems.push_back(&var_fbneo_cyclone);
 #endif
+	if (BurnDrvGetFlags() & BDF_HISCORE_SUPPORTED)
+		vars_systems.push_back(&var_fbneo_hiscores);
 
 	if (pgi_diag)
-	{
 		vars_systems.push_back(&var_fbneo_diagnostic_input);
-	}
 
 	if (bIsNeogeoCartGame)
 	{
@@ -672,8 +897,29 @@ void set_environment()
 		if (allow_neogeo_mode)
 			vars_systems.push_back(&var_fbneo_neogeo_mode);
 		vars_systems.push_back(&var_fbneo_memcard_mode);
+		if (pgi_debug_dip_1)
+		{
+			vars_systems.push_back(&var_fbneo_debug_dip_1_1);
+			vars_systems.push_back(&var_fbneo_debug_dip_1_2);
+			vars_systems.push_back(&var_fbneo_debug_dip_1_3);
+			vars_systems.push_back(&var_fbneo_debug_dip_1_4);
+			vars_systems.push_back(&var_fbneo_debug_dip_1_5);
+			vars_systems.push_back(&var_fbneo_debug_dip_1_6);
+			vars_systems.push_back(&var_fbneo_debug_dip_1_7);
+			vars_systems.push_back(&var_fbneo_debug_dip_1_8);
+		}
+		if (pgi_debug_dip_2)
+		{
+			vars_systems.push_back(&var_fbneo_debug_dip_2_1);
+			vars_systems.push_back(&var_fbneo_debug_dip_2_2);
+			vars_systems.push_back(&var_fbneo_debug_dip_2_3);
+			vars_systems.push_back(&var_fbneo_debug_dip_2_4);
+			vars_systems.push_back(&var_fbneo_debug_dip_2_5);
+			vars_systems.push_back(&var_fbneo_debug_dip_2_6);
+			vars_systems.push_back(&var_fbneo_debug_dip_2_7);
+			vars_systems.push_back(&var_fbneo_debug_dip_2_8);
+		}
 	}
-	vars_systems.push_back(&var_fbneo_cpu_speed_adjust);
 
 	// Frameskip settings
 	if (bLibretroSupportsAudioBuffStatus)
@@ -727,7 +973,7 @@ void set_environment()
 	// Add the DIP switches core options
 	for (int dip_idx = 0; dip_idx < nbr_dips; dip_idx++)
 	{
-		option_defs_us[idx_var].category_key     = "dipswitch";
+		option_defs_us[idx_var].category_key     = "dipswitch-区域选择在这里";
 		option_defs_us[idx_var].key              = dipswitch_core_options[dip_idx].option_name.c_str();
 		option_defs_us[idx_var].desc             = dipswitch_core_options[dip_idx].friendly_name.c_str();
 		option_defs_us[idx_var].desc_categorized = dipswitch_core_options[dip_idx].friendly_name_categorized.c_str();
@@ -768,9 +1014,14 @@ void set_environment()
 	static struct retro_core_option_v2_category option_cats_us[] =
 	{
 		{
+			"neogeo",
+			"Neo-Geo 设置",
+			"Neo-Geo 配置设定"
+		},
+		{
 			"跳帧",
-			"跳帧设置",
-			"配置跳帧设置"
+			"跳帧 设置",
+			"跳帧 配置设定"
 		},
 		{
 			"音频",
@@ -1157,6 +1408,146 @@ void check_variables(void)
 				nMemcardMode = 1;
 			else if (strcmp(var.value, "per-game") == 0)
 				nMemcardMode = 2;
+		}
+		if (pgi_debug_dip_1)
+		{
+			var.key = var_fbneo_debug_dip_1_1.key;
+			if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE, &var) && var.value)
+			{
+				if (strcmp(var.value, "enabled") == 0)
+					pgi_debug_dip_1->Input.Constant.nConst |= 0x01;
+				else
+					pgi_debug_dip_1->Input.Constant.nConst &= ~0x01;
+			}
+			var.key = var_fbneo_debug_dip_1_2.key;
+			if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE, &var) && var.value)
+			{
+				if (strcmp(var.value, "enabled") == 0)
+					pgi_debug_dip_1->Input.Constant.nConst |= 0x02;
+				else
+					pgi_debug_dip_1->Input.Constant.nConst &= ~0x02;
+			}
+			var.key = var_fbneo_debug_dip_1_3.key;
+			if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE, &var) && var.value)
+			{
+				if (strcmp(var.value, "enabled") == 0)
+					pgi_debug_dip_1->Input.Constant.nConst |= 0x04;
+				else
+					pgi_debug_dip_1->Input.Constant.nConst &= ~0x04;
+			}
+			var.key = var_fbneo_debug_dip_1_4.key;
+			if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE, &var) && var.value)
+			{
+				if (strcmp(var.value, "enabled") == 0)
+					pgi_debug_dip_1->Input.Constant.nConst |= 0x08;
+				else
+					pgi_debug_dip_1->Input.Constant.nConst &= ~0x08;
+			}
+			var.key = var_fbneo_debug_dip_1_5.key;
+			if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE, &var) && var.value)
+			{
+				if (strcmp(var.value, "enabled") == 0)
+					pgi_debug_dip_1->Input.Constant.nConst |= 0x10;
+				else
+					pgi_debug_dip_1->Input.Constant.nConst &= ~0x10;
+			}
+			var.key = var_fbneo_debug_dip_1_6.key;
+			if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE, &var) && var.value)
+			{
+				if (strcmp(var.value, "enabled") == 0)
+					pgi_debug_dip_1->Input.Constant.nConst |= 0x20;
+				else
+					pgi_debug_dip_1->Input.Constant.nConst &= ~0x20;
+			}
+			var.key = var_fbneo_debug_dip_1_7.key;
+			if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE, &var) && var.value)
+			{
+				if (strcmp(var.value, "enabled") == 0)
+					pgi_debug_dip_1->Input.Constant.nConst |= 0x40;
+				else
+					pgi_debug_dip_1->Input.Constant.nConst &= ~0x40;
+			}
+			var.key = var_fbneo_debug_dip_1_8.key;
+			if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE, &var) && var.value)
+			{
+				if (strcmp(var.value, "enabled") == 0)
+					pgi_debug_dip_1->Input.Constant.nConst |= 0x80;
+				else
+					pgi_debug_dip_1->Input.Constant.nConst &= ~0x80;
+			}
+			pgi_debug_dip_1->Input.nVal = pgi_debug_dip_1->Input.Constant.nConst;
+			if (pgi_debug_dip_1->Input.pVal)
+				*(pgi_debug_dip_1->Input.pVal) = pgi_debug_dip_1->Input.nVal;
+		}
+		if (pgi_debug_dip_2)
+		{
+			var.key = var_fbneo_debug_dip_2_1.key;
+			if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE, &var) && var.value)
+			{
+				if (strcmp(var.value, "enabled") == 0)
+					pgi_debug_dip_2->Input.Constant.nConst |= 0x01;
+				else
+					pgi_debug_dip_2->Input.Constant.nConst &= ~0x01;
+			}
+			var.key = var_fbneo_debug_dip_2_2.key;
+			if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE, &var) && var.value)
+			{
+				if (strcmp(var.value, "enabled") == 0)
+					pgi_debug_dip_2->Input.Constant.nConst |= 0x02;
+				else
+					pgi_debug_dip_2->Input.Constant.nConst &= ~0x02;
+			}
+			var.key = var_fbneo_debug_dip_2_3.key;
+			if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE, &var) && var.value)
+			{
+				if (strcmp(var.value, "enabled") == 0)
+					pgi_debug_dip_2->Input.Constant.nConst |= 0x04;
+				else
+					pgi_debug_dip_2->Input.Constant.nConst &= ~0x04;
+			}
+			var.key = var_fbneo_debug_dip_2_4.key;
+			if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE, &var) && var.value)
+			{
+				if (strcmp(var.value, "enabled") == 0)
+					pgi_debug_dip_2->Input.Constant.nConst |= 0x08;
+				else
+					pgi_debug_dip_2->Input.Constant.nConst &= ~0x08;
+			}
+			var.key = var_fbneo_debug_dip_2_5.key;
+			if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE, &var) && var.value)
+			{
+				if (strcmp(var.value, "enabled") == 0)
+					pgi_debug_dip_2->Input.Constant.nConst |= 0x10;
+				else
+					pgi_debug_dip_2->Input.Constant.nConst &= ~0x10;
+			}
+			var.key = var_fbneo_debug_dip_2_6.key;
+			if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE, &var) && var.value)
+			{
+				if (strcmp(var.value, "enabled") == 0)
+					pgi_debug_dip_2->Input.Constant.nConst |= 0x20;
+				else
+					pgi_debug_dip_2->Input.Constant.nConst &= ~0x20;
+			}
+			var.key = var_fbneo_debug_dip_2_7.key;
+			if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE, &var) && var.value)
+			{
+				if (strcmp(var.value, "enabled") == 0)
+					pgi_debug_dip_2->Input.Constant.nConst |= 0x40;
+				else
+					pgi_debug_dip_2->Input.Constant.nConst &= ~0x40;
+			}
+			var.key = var_fbneo_debug_dip_2_8.key;
+			if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE, &var) && var.value)
+			{
+				if (strcmp(var.value, "enabled") == 0)
+					pgi_debug_dip_2->Input.Constant.nConst |= 0x80;
+				else
+					pgi_debug_dip_2->Input.Constant.nConst &= ~0x80;
+			}
+			pgi_debug_dip_2->Input.nVal = pgi_debug_dip_2->Input.Constant.nConst;
+			if (pgi_debug_dip_2->Input.pVal)
+				*(pgi_debug_dip_2->Input.pVal) = pgi_debug_dip_2->Input.nVal;
 		}
 	}
 

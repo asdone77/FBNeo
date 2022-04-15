@@ -7682,6 +7682,24 @@ static struct BurnRomInfo Redufob2RomDesc[] = {
 STD_ROM_PICK(Redufob2)
 STD_ROM_FN(Redufob2)
 
+static struct BurnRomInfo Redufob3RomDesc[] = {
+	{ "1.rom1",        0x00800, 0xad9930d3, BRF_ESS | BRF_PRG | GAL_ROM_Z80_PROG1 },
+	{ "2.rom2",        0x00800, 0x65d1792d, BRF_ESS | BRF_PRG | GAL_ROM_Z80_PROG1 },
+	{ "3.rom3",        0x00800, 0xe1030d1c, BRF_ESS | BRF_PRG | GAL_ROM_Z80_PROG1 },
+	{ "4.rom4",        0x00800, 0xd801b80d, BRF_ESS | BRF_PRG | GAL_ROM_Z80_PROG1 },
+	{ "5.rom5",        0x00800, 0xf1e46275, BRF_ESS | BRF_PRG | GAL_ROM_Z80_PROG1 },
+	{ "6.rom6",        0x00800, 0x98513f8a, BRF_ESS | BRF_PRG | GAL_ROM_Z80_PROG1 },
+	{ "7.rom7",        0x00800, 0xfd07d811, BRF_ESS | BRF_PRG | GAL_ROM_Z80_PROG1 },
+	
+	{ "gfx.1h",        0x00800, 0x8a422b0d, BRF_GRA | GAL_ROM_TILES_SHARED },
+	{ "gfx.1k",        0x00800, 0x1eb84cb1, BRF_GRA | GAL_ROM_TILES_SHARED },
+	
+	{ "82s123.6l",     0x00020, 0xc3ac9467, BRF_GRA | GAL_ROM_PROM },
+};
+
+STD_ROM_PICK(Redufob3)
+STD_ROM_FN(Redufob3)
+
 static struct BurnRomInfo ExodusRomDesc[] = {
 	{ "exodus1.bin",   0x00800, 0x5dfe65e1, BRF_ESS | BRF_PRG | GAL_ROM_Z80_PROG1 },
 	{ "exodus2.bin",   0x00800, 0x6559222f, BRF_ESS | BRF_PRG | GAL_ROM_Z80_PROG1 },
@@ -8823,6 +8841,16 @@ struct BurnDriver BurnDrvRedufob2 = {
 	NULL, NULL, NULL, NULL,
 	BDF_GAME_WORKING | BDF_CLONE | BDF_ORIENTATION_VERTICAL | BDF_ORIENTATION_FLIPPED | BDF_BOOTLEG | BDF_HISCORE_SUPPORTED, 2, HARDWARE_GALAXIAN, GBF_VERSHOOT, 0,
 	NULL, Redufob2RomInfo, Redufob2RomName, NULL, NULL, NULL, NULL, GalaxianInputInfo, RedufobDIPInfo,
+	GalInit, GalExit, GalFrame, GalDraw, GalScan,
+	NULL, 392, 224, 256, 3, 4
+};
+
+struct BurnDriver BurnDrvRedufob3 = {
+	"redufob3", "redufo", NULL, NULL, "1981",
+	"Defend the Terra Attack on the Red UFO (bootleg, set 3)\0", NULL, "bootleg", "Galaxian",
+	NULL, NULL, NULL, NULL,
+	BDF_GAME_WORKING | BDF_CLONE | BDF_ORIENTATION_VERTICAL | BDF_ORIENTATION_FLIPPED | BDF_BOOTLEG | BDF_HISCORE_SUPPORTED, 2, HARDWARE_GALAXIAN, GBF_VERSHOOT, 0,
+	NULL, Redufob3RomInfo, Redufob3RomName, NULL, NULL, NULL, NULL, GalaxianInputInfo, RedufobDIPInfo,
 	GalInit, GalExit, GalFrame, GalDraw, GalScan,
 	NULL, 392, 224, 256, 3, 4
 };
@@ -9976,7 +10004,7 @@ struct BurnDriver BurnDrvAtlantisb = {
 };
 
 // Seperate sprite/tile roms with IRQ0 instead of NMI
-static struct BurnRomInfo DevilfsgRomDesc[] = {
+static struct BurnRomInfo DevilfshgbRomDesc[] = {
 	{ "dfish1.7f",     0x01000, 0x2ab19698, BRF_ESS | BRF_PRG | GAL_ROM_Z80_PROG1 },
 	{ "dfish2.7h",     0x01000, 0x4e77f097, BRF_ESS | BRF_PRG | GAL_ROM_Z80_PROG1 },
 	{ "dfish3.7k",     0x01000, 0x3f16a4c6, BRF_ESS | BRF_PRG | GAL_ROM_Z80_PROG1 },
@@ -9988,8 +10016,8 @@ static struct BurnRomInfo DevilfsgRomDesc[] = {
 	{ "82s123.6e",     0x00020, 0x4e3caeab, BRF_GRA | GAL_ROM_PROM },
 };
 
-STD_ROM_PICK(Devilfsg)
-STD_ROM_FN(Devilfsg)
+STD_ROM_PICK(Devilfshgb)
+STD_ROM_FN(Devilfshgb)
 
 static void DevilfsgRearrangeRom()
 {
@@ -10037,12 +10065,12 @@ static INT32 DevilfsgInit()
 	return nRet;
 }
 
-struct BurnDriver BurnDrvDevilfsg = {
-	"devilfsg", "devilfsh", NULL, NULL, "1984",
-	"Devil Fish (Galaxian hardware, bootleg?)\0", NULL, "Vision / Artic", "Galaxian",
+struct BurnDriver BurnDrvDevilfshgb = {
+	"devilfshgb", "devilfsh", NULL, NULL, "1984",
+	"Devil Fish (Galaxian hardware, bootleg)\0", NULL, "bootleg (Vision)", "Galaxian",
 	NULL, NULL, NULL, NULL,
-	BDF_GAME_WORKING | BDF_CLONE | BDF_ORIENTATION_VERTICAL | BDF_BOOTLEG | BDF_HISCORE_SUPPORTED, 2, HARDWARE_GALAXIAN, GBF_MAZE, 0,
-	NULL, DevilfsgRomInfo, DevilfsgRomName, NULL, NULL, NULL, NULL, DevilfsgInputInfo, DevilfsgDIPInfo,
+	BDF_GAME_WORKING | BDF_CLONE | BDF_ORIENTATION_VERTICAL | BDF_ORIENTATION_FLIPPED | BDF_BOOTLEG | BDF_HISCORE_SUPPORTED, 2, HARDWARE_GALAXIAN, GBF_MAZE, 0,
+	NULL, DevilfshgbRomInfo, DevilfshgbRomName, NULL, NULL, NULL, NULL, DevilfsgInputInfo, DevilfsgDIPInfo,
 	DevilfsgInit, GalExit, GalFrame, GalDraw, GalScan,
 	NULL, 392, 224, 256, 3, 4
 };

@@ -3,9 +3,9 @@
 #include "burner.h"
 #include <process.h>
 
-// reduce the total number of sets by this number - (isgsm, neogeo, nmk004, pgm, skns, ym2608, coleco, msx_msx, spectrum, spec128, decocass, midssio, cchip, fdsbios, ngp, bubsys, channelf, namcoc69, namcoc70, namcoc75)
+// reduce the total number of sets by this number - (isgsm, neogeo, nmk004, pgm, skns, ym2608, coleco, msx_msx, spectrum, spec128, spec1282a, decocass, midssio, cchip, fdsbios, ngp, bubsys, channelf, namcoc69, namcoc70, namcoc75)
 // don't reduce for these as we display them in the list (neogeo, neocdz)
-#define REDUCE_TOTAL_SETS_BIOS      20
+#define REDUCE_TOTAL_SETS_BIOS      21
 
 UINT_PTR nTimer					= 0;
 UINT_PTR nInitPreviewTimer		= 0;
@@ -1189,12 +1189,11 @@ static void ViewEmma()
 {
 	HANDLE hThread = NULL;
 	unsigned ThreadID = 0;
-	TCHAR szShellExURL[MAX_PATH];
+	static TCHAR szShellExURL[MAX_PATH];
 
 	_stprintf(szShellExURL, _T("http://adb.arcadeitalia.net/dettaglio_mame.php?game_name=%s"), BurnDrvGetText(DRV_NAME));
 
 	hThread = (HANDLE)_beginthreadex(NULL, 0, DoShellExThread, (void*)szShellExURL, 0, &ThreadID);
-	Sleep(150); // allow arguments to pass to ShellExecute() in new thread before they get disposed.
 }
 
 static void RebuildEverything()
